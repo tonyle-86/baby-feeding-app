@@ -1,0 +1,23 @@
+$test: red;
+
+.Button {
+    background-color: #71c9ce;
+    padding: 10px 30px;
+    font-size: 14px;
+    font-family: 'Indie Flower', cursive;
+    border: none;
+    color: #fff;
+    
+    &:hover {
+        background-color: red;
+    }
+}
+
+.cancel {
+    background-color: #cbf1f5;
+}
+
+.submit {
+    background-color: #71c9ce;
+
+}
