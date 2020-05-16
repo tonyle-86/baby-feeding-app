@@ -1,3 +1,5 @@
+@import '../../../variables.scss';
+
 .Input {
     box-shadow: 0 8px 10px 2px rgba(0,0,0,.01), 
     2px 4px 10px 2px rgba(0,0,0,.03), 
@@ -7,6 +9,7 @@
     width: 100%;
     box-sizing: border-box;
     margin-bottom: 30px;
+    font-family: $mainFont;
 
     &:hover {
         margin-bottom: 30px;

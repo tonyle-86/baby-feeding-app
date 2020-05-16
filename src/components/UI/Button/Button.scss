@@ -1,16 +1,12 @@
-$test: red;
+@import '../../../variables.scss';
 
 .Button {
     background-color: #71c9ce;
     padding: 10px 30px;
     font-size: 14px;
-    font-family: 'Indie Flower', cursive;
+    font-family: $mainFont;
     border: none;
     color: #fff;
-    
-    &:hover {
-        background-color: red;
-    }
 }
 
 .cancel {
