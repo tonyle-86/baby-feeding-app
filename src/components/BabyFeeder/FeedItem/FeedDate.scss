@@ -1,7 +1,6 @@
 @import '../../../variables.scss';
 @import '../../../mixins.scss';
 
-
-.Input {
-    @include formStyling;
+.feed-date {
+    font-family: 'Roboto', sans-serif;
 }

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Input from '../../UI/Input/Input';
 import Dropdown from '../../UI/Dropdown/Dropdown';
 import Textarea from '../../UI/Textarea/Textarea';
 import Aux from '../../../hoc/Aux/Aux';
@@ -8,6 +7,8 @@ import './FeedForm.scss';
 import axios from 'axios';
 import Datepicker from 'react-datepicker';
 import '../../UI/Datepicker/Datepicker.scss';
+import FeedDate from '../FeedItem/FeedDate';
+import FeedDetail from '../FeedItem/FeedDetail';
 
 class FeedForm extends Component {
 
@@ -15,14 +16,9 @@ class FeedForm extends Component {
         date: new Date(),
         time: new Date(),
         amount: 10,
-        notes: ''
+        notes: '',
+        feeds: []
     };
-
-    formatDate = (newDate) => {
-        newDate = this.state.date.toJSON().slice(0, 10);
-
-        return newDate.replace(/-/g, '/').split('/').reverse().join('/');
-    }
 
     handleDateChange = (date) => {
         this.setState({
@@ -38,9 +34,9 @@ class FeedForm extends Component {
 
     postDataHandler = () => {
         const feed = {
-            date: this.state.date.toLocaleDateString(),
-            time: this.state.time.toLocaleTimeString().slice(0, 5),
-            amount: this.state.amount,
+            date: this.state.date.toISOString().slice(0,10),
+            time: this.state.time.toLocaleTimeString(),
+            amount: parseInt(this.state.amount),
             notes: this.state.notes
         };
 
@@ -57,11 +53,57 @@ class FeedForm extends Component {
         .catch(error => {
             console.log(error);
         })
+    };
+
+    componentDidMount() {
+        axios.get('https://baby-feeder-uat-185a3.firebaseio.com/feeds.json')
+        .then(response => {
+            if (response.data) {       
+                const feedsObj = Object.keys(response.data);
+                let feedsByDate = feedsObj.map(i => {
+                    return response.data[i];
+                })
+                .sort((a,b) => {
+                    return new Date(b.date) - new Date(a.date);
+                });
+
+                const sortByDateArr = [...feedsByDate];
+
+                const groupBy = (array, key) => {
+                    return array.reduce((result, currentValue) => {
+                        (result[currentValue[key]] = result[currentValue[key]] || []).push(
+                            currentValue
+                        );
+                        return result;
+                    }, {}); 
+                };
+
+                const feedsGroupedByDate = groupBy(sortByDateArr, 'date');
+
+                this.setState({
+                    feeds: feedsGroupedByDate
+                });
+            }
+        })
     }
 
     render() {
+
+        let feeds = Object.keys(this.state.feeds);
+
+        let groupDates = feeds.map((item,idx) => {
+            return <FeedDate key={idx} date={item}>
+                {this.state.feeds[item].map(x => {
+                    return <FeedDetail key={x.time} amount={x.amount} time={x.time} notes={x.notes}/>
+                })}
+            </FeedDate>
+        })
+
         return (
             <Aux>
+
+                {groupDates}
+
                 <label>Date:</label>
                 <Datepicker selected={this.state.date} onChange={this.handleDateChange} dateFormat="dd/MM/yyyy" />
                 <label>Time:</label>
@@ -79,7 +121,6 @@ class FeedForm extends Component {
                     <Button styleName="cancel" label="Cancel" />
                     <Button clicked={this.postDataHandler} styleName="" label="Submit"/>
                 </div>
-
 
             </Aux>
         )

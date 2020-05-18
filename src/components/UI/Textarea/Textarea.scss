@@ -1,15 +1,8 @@
 @import '../../../variables.scss';
+@import '../../../mixins.scss';
 
 .Textarea {
-    box-shadow: 0 8px 10px 2px rgba(0,0,0,.01), 
-    2px 4px 10px 2px rgba(0,0,0,.03), 
-    -2px 4px 10px 2px rgba(0,0,0,.03);
-    border: 1px solid #ebedf1;
-    padding: 10px;
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 30px;
-    font-family: $mainFont;
+    @include formStyling;
     height: 200px;
     font-size: 14px;
 }
