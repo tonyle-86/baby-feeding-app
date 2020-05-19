@@ -1,17 +1,53 @@
 @import '../../../variables.scss';
 @import '../../../mixins.scss';
 
-.feed-details {
-    @include formStyling;
-    background-color: white;
-    // font-family: 'Roboto', sans-serif;
-    font-size: 14px;
-
-    .feed-detail {
-         border-bottom: solid 1px $color3;
-
-         &:last-of-type {
-             border-bottom: none;
-         }
+.feed {
+    &-details{
+        background-color: white;
+        @include formStyling;
+        font-family: 'Roboto', sans-serif;
+        font-size: 14px;
+        padding: 10px;
     }
+
+    &-item {
+        border-bottom: solid 1px $color3;
+
+        &:last-of-type {
+            border-bottom: none;
+        }
+
+    }
+
+    &-time {
+        // width: 65px;
+        display: inline-block;
+        padding: 10px 10px 10px 0;
+    }
+
+    &-amount {
+        display: inline-block;
+        padding: 10px;
+    }
+
 }
+
+
+
+
+
+// .feed-details {
+//     @include formStyling;
+//     background-color: white;
+//     // font-family: 'Roboto', sans-serif;
+//     font-size: 14px;
+   
+
+//     .feed-detail {
+//          border-bottom: solid 1px $color3;
+
+//          &:last-of-type {
+//              border-bottom: none;
+//          }
+//     }
+// }

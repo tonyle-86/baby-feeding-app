@@ -9,8 +9,9 @@ class FeedDetail extends Component {
 
     render() {
         return (
-            <div className="feed-detail">
-                <p>{this.props.time.slice(0,5)} - {this.props.amount}ml</p>
+            <div className="feed-item">
+                <div className="feed-time">{new Date(this.props.time).toLocaleTimeString().slice(0,5)}</div>
+                <div className="feed-amount">{this.props.amount}ml</div>
                 {this.props.notes ? <p><strong>Notes:</strong> {this.props.notes}</p> : null}
             </div>
         )

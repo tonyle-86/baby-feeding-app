@@ -18,11 +18,13 @@ class FeedDate extends Component {
         }
 
         return (
-            <div className='feed-item'>
+            <div className='group-feed'>
                 <h3 className="feed-date">{days[new Date(this.props.date).getDay()]} {new Date(this.props.date).getDate()}{nth(new Date(this.props.date).getDate())} {months[new Date(this.props.date).getMonth()]}</h3>
 
                 <div className="feed-details">
+                    <h3 className="feed-total">Total milk today: {this.props.total}ml</h3>
                     {this.props.children}
+                
                 </div>
                 
             </div>

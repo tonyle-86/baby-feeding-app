@@ -17,7 +17,8 @@ class FeedForm extends Component {
         time: new Date(),
         amount: 10,
         notes: '',
-        feeds: []
+        feeds: [],
+        isLoading: false
     };
 
     handleDateChange = (date) => {
@@ -35,68 +36,92 @@ class FeedForm extends Component {
     postDataHandler = () => {
         const feed = {
             date: this.state.date.toISOString().slice(0,10),
-            time: this.state.time.toLocaleTimeString(),
+            time: new Date(this.state.time).getTime(),
             amount: parseInt(this.state.amount),
             notes: this.state.notes
         };
 
         axios.post('https://baby-feeder-uat-185a3.firebaseio.com/feeds.json', feed)
         .then(response => {
-            console.log(response);
             this.setState({
                 date: new Date(),
                 time: new Date(),
                 amount: 10,
-                notes: ''
-            })
+                notes: '',
+                isLoading: true
+            });
+            this.getLatestFeeds();
         })
         .catch(error => {
             console.log(error);
         })
     };
 
-    componentDidMount() {
+    fetchFeedsData = () => {
         axios.get('https://baby-feeder-uat-185a3.firebaseio.com/feeds.json')
         .then(response => {
-            if (response.data) {       
+            if (response.data) {
                 const feedsObj = Object.keys(response.data);
                 let feedsByDate = feedsObj.map(i => {
                     return response.data[i];
                 })
-                .sort((a,b) => {
+                .sort((x, y) => {
+                    return new Date(y.time) - new Date(x.time);
+                })
+                .sort((a, b) => {
                     return new Date(b.date) - new Date(a.date);
-                });
+                })
 
                 const sortByDateArr = [...feedsByDate];
 
                 const groupBy = (array, key) => {
                     return array.reduce((result, currentValue) => {
+
                         (result[currentValue[key]] = result[currentValue[key]] || []).push(
                             currentValue
                         );
                         return result;
-                    }, {}); 
+                    }, {});
                 };
 
                 const feedsGroupedByDate = groupBy(sortByDateArr, 'date');
 
                 this.setState({
-                    feeds: feedsGroupedByDate
+                    feeds: feedsGroupedByDate,
+                    isLoading: false
                 });
             }
         })
+        .catch(error => {
+            console.log(error);
+        })
+    }
+
+
+    getLatestFeeds = () => {
+        if (this.state.isLoading) {
+            this.fetchFeedsData()
+        }
+    }
+
+    componentDidMount() {
+        this.fetchFeedsData()
     }
 
     render() {
 
         let feeds = Object.keys(this.state.feeds);
 
+        let getMilkTotal = feeds.map((item,idx) => {
+            return this.state.feeds[item].reduce((a,cv) => {
+                return a + cv.amount
+            },0)
+        })
+
         let groupDates = feeds.map((item,idx) => {
-            return <FeedDate key={idx} date={item}>
-                {this.state.feeds[item].map(x => {
-                    return <FeedDetail key={x.time} amount={x.amount} time={x.time} notes={x.notes}/>
-                })}
-            </FeedDate>
+            return <FeedDate key={idx} date={item} total={getMilkTotal[idx]}>{this.state.feeds[item].map(x => {
+                return <FeedDetail key={x.time + x.amount + getMilkTotal[idx]} amount={x.amount} time={x.time} notes={x.notes}/> 
+            })}</FeedDate>
         })
 
         return (
