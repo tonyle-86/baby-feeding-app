@@ -7,10 +7,13 @@
     font-family: $mainFont;
     border: none;
     color: #fff;
+    width: 100%;
+    margin-bottom: 30px;
 }
 
 .cancel {
     background-color: #cbf1f5;
+    color: $color1;
 }
 
 .submit {

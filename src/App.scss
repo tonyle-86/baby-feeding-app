@@ -9,3 +9,12 @@
   font-family: $mainFont;
   color: #71c9ce;
 }
+
+label {
+  display: block;
+}
+
+.half-coloumn {
+  width: 48%;
+  display: inline-block;
+}

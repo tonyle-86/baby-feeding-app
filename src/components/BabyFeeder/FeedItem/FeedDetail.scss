@@ -11,7 +11,8 @@
     }
 
     &-item {
-        border-bottom: solid 1px $color3;
+        // border-bottom: solid 1px $color3;
+        margin-bottom: 10px;
 
         &:last-of-type {
             border-bottom: none;
@@ -22,7 +23,10 @@
     &-time {
         // width: 65px;
         display: inline-block;
-        padding: 10px 10px 10px 0;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: $color2;
+        color: white;
     }
 
     &-amount {
@@ -31,23 +35,3 @@
     }
 
 }
-
-
-
-
-
-// .feed-details {
-//     @include formStyling;
-//     background-color: white;
-//     // font-family: 'Roboto', sans-serif;
-//     font-size: 14px;
-   
-
-//     .feed-detail {
-//          border-bottom: solid 1px $color3;
-
-//          &:last-of-type {
-//              border-bottom: none;
-//          }
-//     }
-// }

@@ -7,15 +7,20 @@ class Dropdown extends Component {
 
     render() {
 
-        let optionsArr = [];
+        let optionsArr;
 
-        for (let i = 10; i <= 300; i += 5) {
-            optionsArr.push(i);
-        }
+        if (this.props.type === 'milk') {
+            optionsArr = [];
+            for (let i = 10; i <= 300; i += 5) {
+                optionsArr.push(i);
+            }
+         } else {
+            optionsArr = ['Chao', 'Rice', 'Carrots', 'Chicken'];
+         }
 
         const optionsItems = optionsArr.map((i) => {
             return (
-                <DropdownOption key={i} label={i} />
+                <DropdownOption type={this.props.type} key={i} label={i} />
             )
         })
 
