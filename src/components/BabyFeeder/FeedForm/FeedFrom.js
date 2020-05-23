@@ -18,10 +18,6 @@ class FeedForm extends Component {
         time: new Date(),
         milk: 10,
         notes: '',
-        // food: [{
-        //     name: 'Chao',
-        //     quantity: 1
-        // }],
         food: [],
         feeds: [],
         isLoading: false
@@ -41,8 +37,8 @@ class FeedForm extends Component {
 
     postDataHandler = () => {
         const payload = {
-            date: this.state.date.toISOString().slice(0,10),
-            time: new Date(this.state.time).getTime(),
+            date: this.state.date.toISOString().slice(0, 10),
+            time: this.state.time,
             milk: parseInt(this.state.milk),
             food: [...this.state.food],
             notes: this.state.notes
@@ -116,22 +112,10 @@ class FeedForm extends Component {
         this.fetchFeedsData()
     }
 
-    addAdditionalFood = (event, idx) => {
-        console.log('fffff');
-
-        if(this.state.food.length === 0){
-            this.setState({
-                food: [{
-                    name: 'Chao',
-                    quantity: 1
-                }],
-            })
-        } else {
-
-            this.setState(prevState => ({
-                food: [...prevState.food, {name: 'Chao', quantity: 1}]
-            }))
-        }
+    addAdditionalFood = () => {
+        this.setState(prevState => ({
+            food: [...prevState.food, { name: 'Chao', quantity: 1 }]
+        }));
     }
 
     render() {
@@ -146,35 +130,67 @@ class FeedForm extends Component {
 
         let groupDates = feeds.map((item,idx) => {
             return <FeedDate key={idx} date={item} total={getMilkTotal[idx]}>{this.state.feeds[item].map(x => {
-                return <FeedDetail key={x.time + x.milk + getMilkTotal[idx]} milk={x.milk} time={x.time} notes={x.notes}/> 
+                let foodEatenAtTime;
+                if (x.food) {
+                    foodEatenAtTime = x.food.map((item, idx) => {
+                        return item.name;
+                    })
+                }
+                console.log(foodEatenAtTime)
+                return <FeedDetail food={x.food ? foodEatenAtTime : null } key={x.time + x.milk + getMilkTotal[idx]} milk={x.milk} time={x.time} notes={x.notes}/> 
             })}</FeedDate>
         })
-        console.log(this.state.food);
-        const addFood = this.state.food.map((item, idx) => {
+
+        const addFoodSection = this.state.food.map((item, idx) => {
 
             return <div className="food-section">
                 
                 <div className="half-coloumn">
                     <Dropdown type="food"
                         className="dropdown-food"
-                        label='Food'
                         key={idx}
                         value={this.state.food[idx].name}
-                        change={(event) => this.setState({ food: [...this.state.food, { name: event.target.value, quantity: this.state.food[idx].quantity }] })}
+                        change={event => {
+                            const { food } = this.state;
+                            food[idx] = {
+                                name: event.target.value,
+                                quantity: this.state.food[idx].quantity
+                            };
+                            this.setState({
+                                food
+                            });
+                        }}
                     />
                 </div>
 
-
                 <div className="half-coloumn">
-                    <Input label="Quantity"
+                    <Input 
                         className="quantity-food"
                         value={this.state.food[idx].quantity}
-                        change={(event) => this.setState({ food: [{ quantity: event.target.value, name: this.state.food[idx].name }]})
-                    } />
+                        change={event => {
+                            const { food } = this.state;
+                            food[idx] = {
+                                name: this.state.food[idx].name,
+                                quantity: event.target.value,
+                            };
+                            this.setState({
+                                food
+                            });
+                        }}
+                    />
                 </div>
             </div>
             
-        })
+        });
+
+        let foodLabels;
+        
+        if (this.state.food.length >= 1)  {
+            foodLabels = <div className="food-section">
+                <div className="half-coloumn"><label>Food:</label></div>
+                <div className="half-coloumn"><label>Quantity:</label></div>
+            </div>
+        }
 
         return (
             <Aux>
@@ -193,10 +209,11 @@ class FeedForm extends Component {
                     dateFormat="h:mm aa"
                 />
                 <Dropdown type="milk" label='milk' value={this.state.milk} change={(event) => this.setState({ milk: event.target.value })}/>
+                
+                {foodLabels}
+                {addFoodSection}    
 
-                {addFood}    
-
-                <Button styleName="add" label="Add Food" clicked={this.addAdditionalFood}/>
+                <Button styleName="add" label={this.state.food.length === 0 ? 'Add Food' : 'Add Additional Food'} clicked={this.addAdditionalFood}/>
 
                 <Textarea label='Notes' change={(event) => this.setState({notes: event.target.value })}/>
                 <div className="FeedForm--button-container">

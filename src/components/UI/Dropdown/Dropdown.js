@@ -26,7 +26,7 @@ class Dropdown extends Component {
 
         return(
             <Aux>
-                <label className="label">{this.props.label}:</label>
+                {this.props.label ? <label className="label">{this.props.label}:</label> : null}
                 <select className="Dropdown" value={this.props.value} onChange={this.props.change} >
                     {optionsItems}   
                 </select>
