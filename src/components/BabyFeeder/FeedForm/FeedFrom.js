@@ -1,26 +1,21 @@
 import React, { Component } from 'react';
-import Dropdown from '../../UI/Dropdown/Dropdown';
-import Textarea from '../../UI/Textarea/Textarea';
+import { Route, Redirect, NavLink, Switch } from 'react-router-dom';
 import Aux from '../../../hoc/Aux/Aux';
-import Button from '../..//UI/Button/Button';
-import './FeedForm.scss';
 import axios from 'axios';
-import Datepicker from 'react-datepicker';
-import '../../UI/Datepicker/Datepicker.scss';
-import FeedDate from '../FeedItem/FeedDate';
-import FeedDetail from '../FeedItem/FeedDetail';
-import Input  from '../../UI/Input/Input';
+import FeedsList from '../FeedsList/FeedsList';
+import Form from '../Form/Form';
 
 class FeedForm extends Component {
 
     state = {
         date: new Date(),
         time: new Date(),
-        milk: 10,
+        milk: 0,
         notes: '',
         food: [],
         feeds: [],
-        isLoading: false
+        isLoading: false,
+        hasSubmitted: false
     };
 
     handleDateChange = (date) => {
@@ -49,9 +44,10 @@ class FeedForm extends Component {
             this.setState({
                 date: new Date(),
                 time: new Date(),
-                milk: 10,
+                milk: 0,
                 notes: '',  
                 food: [],
+                hasSubmitted: true,
                 isLoading: true
             });
             this.getLatestFeeds();
@@ -92,15 +88,22 @@ class FeedForm extends Component {
 
                 this.setState({
                     feeds: feedsGroupedByDate,
-                    isLoading: false
+                    isLoading: false,
+                    hasSubmitted: false
                 });
+
+
+                
             }
+
+
+
+            
         })
         .catch(error => {
             console.log(error);
         })
     }
-
 
     getLatestFeeds = () => {
         if (this.state.isLoading) {
@@ -112,119 +115,55 @@ class FeedForm extends Component {
         this.fetchFeedsData()
     }
 
-    addAdditionalFood = () => {
+    addAdditionalFoodHandler = () => {
         this.setState(prevState => ({
             food: [...prevState.food, { name: 'Chao', quantity: 1 }]
         }));
     }
 
-    render() {
-
-        let feeds = Object.keys(this.state.feeds);
-
-        let getMilkTotal = feeds.map((item,idx) => {
-            return this.state.feeds[item].reduce((a,cv) => {
-                return a + cv.milk
-            },0)
-        })
-
-        let groupDates = feeds.map((item,idx) => {
-            return <FeedDate key={idx} date={item} total={getMilkTotal[idx]}>{this.state.feeds[item].map(x => {
-                let foodEatenAtTime;
-                if (x.food) {
-                    foodEatenAtTime = x.food.map((item, idx) => {
-                        return item.name;
-                    })
-                }
-                console.log(foodEatenAtTime)
-                return <FeedDetail food={x.food ? foodEatenAtTime : null } key={x.time + x.milk + getMilkTotal[idx]} milk={x.milk} time={x.time} notes={x.notes}/> 
-            })}</FeedDate>
-        })
-
-        const addFoodSection = this.state.food.map((item, idx) => {
-
-            return <div className="food-section">
-                
-                <div className="half-coloumn">
-                    <Dropdown type="food"
-                        className="dropdown-food"
-                        key={idx}
-                        value={this.state.food[idx].name}
-                        change={event => {
-                            const { food } = this.state;
-                            food[idx] = {
-                                name: event.target.value,
-                                quantity: this.state.food[idx].quantity
-                            };
-                            this.setState({
-                                food
-                            });
-                        }}
-                    />
-                </div>
-
-                <div className="half-coloumn">
-                    <Input 
-                        className="quantity-food"
-                        value={this.state.food[idx].quantity}
-                        change={event => {
-                            const { food } = this.state;
-                            food[idx] = {
-                                name: this.state.food[idx].name,
-                                quantity: event.target.value,
-                            };
-                            this.setState({
-                                food
-                            });
-                        }}
-                    />
-                </div>
-            </div>
-            
+    foodChangeHandler = () => {
+        const { food } = this.state;
+        this.setState({
+            food
         });
+    }
+    
+    milkChangeHandler = event => {
+        this.setState({
+            milk: event.target.value
+        })
+    }
 
-        let foodLabels;
-        
-        if (this.state.food.length >= 1)  {
-            foodLabels = <div className="food-section">
-                <div className="half-coloumn"><label>Food:</label></div>
-                <div className="half-coloumn"><label>Quantity:</label></div>
-            </div>
+    notesHandler = event => {
+        this.setState({
+            notes: event.target.value
+        })
+    }
+
+    render() {
+        let redirectToFeed =  null;
+        if(this.state.hasSubmitted){
+            redirectToFeed =  <Redirect to='/feed' />
         }
-
         return (
             <Aux>
+                <Route path='/feed' exact>
+                    <FeedsList {...this.state} componentDidMount={this.componentDidMount.bind(this)}/>
+                </Route>
+                <Route path='/add-feed' exact>
+                    <Form {...this.state} 
+                        handleDateChange={this.handleDateChange.bind(this)} 
+                        handleTimeChange={this.handleTimeChange.bind(this)}
+                        milkChangeHandler={this.milkChangeHandler.bind(this)}
+                        addAdditionalFoodHandler={this.addAdditionalFoodHandler.bind(this)}
+                        foodChangeHandler={this.foodChangeHandler.bind(this)}
+                        foodQuantityHandler={this.foodChangeHandler.bind(this)} 
+                        notesHandler={this.notesHandler.bind(this)}
+                        postDataHandler={this.postDataHandler.bind(this)}
+                    />
+                </Route>
 
-                {groupDates}
-
-                <label>Date:</label>
-                <Datepicker selected={this.state.date} onChange={this.handleDateChange} dateFormat="dd/MM/yyyy" />
-                <label>Time:</label>
-                <Datepicker
-                    selected={this.state.time} onChange={this.handleTimeChange}
-                    showTimeSelect
-                    showTimeSelectOnly
-                    timeIntervals={5}
-                    timeCaption="Time"
-                    dateFormat="h:mm aa"
-                />
-                <Dropdown type="milk" label='milk' value={this.state.milk} change={(event) => this.setState({ milk: event.target.value })}/>
-                
-                {foodLabels}
-                {addFoodSection}    
-
-                <Button styleName="add" label={this.state.food.length === 0 ? 'Add Food' : 'Add Additional Food'} clicked={this.addAdditionalFood}/>
-
-                <Textarea label='Notes' change={(event) => this.setState({notes: event.target.value })}/>
-                <div className="FeedForm--button-container">
-                    <div className="half-coloumn">
-                        <Button styleName="cancel" label="Cancel" />
-                    </div>                
-                    <div className="half-coloumn">
-                        <Button clicked={this.postDataHandler} styleName="" label="Submit"/>
-                    </div>
-                </div>
-
+                {redirectToFeed}
             </Aux>
         )
     }

@@ -6,7 +6,7 @@ const textArea = (props) => {
     return (
         <Aux>
             <label>{props.label}:</label>
-            <textarea onChange={props.change} className="Textarea"></textarea>
+            <textarea onChange={props.changeHandler} className="Textarea"></textarea>
         </Aux>
     )
 }

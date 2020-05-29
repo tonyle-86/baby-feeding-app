@@ -1,9 +1,10 @@
 import React from 'react';
 import './AddFeedButton.scss';
+import { Link } from 'react-router-dom';
 
 const addFeedButton = (props) => {
     return (
-        <button className="AddFeedButton">{props.label}</button>
+        <Link to='/add-feed' className="AddFeedButton">{props.label}</Link>
     )
 }
 

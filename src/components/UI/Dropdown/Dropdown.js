@@ -11,7 +11,7 @@ class Dropdown extends Component {
 
         if (this.props.type === 'milk') {
             optionsArr = [];
-            for (let i = 10; i <= 300; i += 5) {
+            for (let i = 0; i <= 300; i += 5) {
                 optionsArr.push(i);
             }
          } else {
@@ -27,7 +27,7 @@ class Dropdown extends Component {
         return(
             <Aux>
                 {this.props.label ? <label className="label">{this.props.label}:</label> : null}
-                <select className="Dropdown" value={this.props.value} onChange={this.props.change} >
+                <select className="Dropdown" value={this.props.value} onChange={this.props.changeHandler} >
                     {optionsItems}   
                 </select>
             </Aux>
