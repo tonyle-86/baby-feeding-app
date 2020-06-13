@@ -1,5 +1,11 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #e3fdfd;
+  background-color: white;
+}
+
+button, input, select, textarea {
+  &:focus {
+    outline: 0
+  }
 }

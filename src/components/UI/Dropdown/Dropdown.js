@@ -14,9 +14,9 @@ class Dropdown extends Component {
             for (let i = 0; i <= 300; i += 5) {
                 optionsArr.push(i);
             }
-         } else {
+        } else {
             optionsArr = ['Chao', 'Rice', 'Carrots', 'Chicken'];
-         }
+        }
 
         const optionsItems = optionsArr.map((i) => {
             return (

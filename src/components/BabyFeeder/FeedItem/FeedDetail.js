@@ -15,10 +15,17 @@ class FeedDetail extends Component {
                 </div>
                 <div className="feed-amount">
                                     
-                    
-                    {this.props.milk ? <p><strong>Milk:</strong> {this.props.milk}ml</p> : null}
-                    {this.props.food ? <p><strong>Food:</strong> {this.props.food}</p> : null}
-                    {this.props.notes ? <p><strong>Notes:</strong> {this.props.notes}</p> : null}
+                    <div className="half-coloumn">
+                        <div>
+                            <strong>Milk</strong><br />{this.props.milk ? this.props.milk + 'ml' : 'None'}
+                        </div>
+                    </div>
+                    <div className="half-coloumn">
+                        <div>
+                            <strong>Food</strong><br /> {this.props.food ? this.props.food : 'None'}
+                        </div>
+                    </div>
+                    <div className="full-coloumn">{this.props.notes ? <div><strong>Notes</strong><br /> {this.props.notes}</div> : null}</div>
                 </div>
 
                 

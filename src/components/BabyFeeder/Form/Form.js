@@ -10,13 +10,10 @@ import '../../UI/Datepicker/Datepicker.scss';
 
 class Form extends Component {
     render(){
-
         const addFoodSection = this.props.food.map((item, idx) => {
-
-            return <div className="food-section">
-
+            return <div key={idx} className="food-section">
                 <div className="half-coloumn">
-                    <Dropdown key={idx} type="food"
+                    <Dropdown  type="food"
                         className="dropdown-food"
                         value={this.props.food[idx].name}
                         changeHandler={event => {
@@ -27,12 +24,11 @@ class Form extends Component {
                             };
                             this.props.foodChangeHandler();
                         }}
-             
                     />
                 </div>
 
                 <div className="half-coloumn">
-                    <Input
+                    <Input key={idx}
                         className="quantity-food"
                         value={this.props.food[idx].quantity}
                         change={event => {
@@ -57,6 +53,11 @@ class Form extends Component {
                 <div className="half-coloumn"><label>Quantity:</label></div>
             </div>
         }
+
+        const disabledSubmit = (this.props.milk === 0 || this.props.milk === '0') && this.props.food.length === 0 && this.props.notes === '' ? 'hide': null;
+
+        console.log(this.props.milk)
+
         return(
 
             <Aux>
@@ -72,7 +73,7 @@ class Form extends Component {
                     timeCaption="Time"
                     dateFormat="h:mm aa"
                 />
-                <Dropdown type="milk" label='milk' value={this.props.milk} 
+                <Dropdown type="milk" label='Milk' value={this.props.milk} 
                 changeHandler={this.props.milkChangeHandler.bind(this)} />
 
                 {foodLabels}
@@ -87,7 +88,7 @@ class Form extends Component {
                         <Button styleName="cancel" label="Cancel" />
                     </div>
                     <div className="half-coloumn">
-                        <Button clicked={this.props.postDataHandler} styleName="" label="Submit" />
+                        <Button clicked={this.props.postDataHandler} styleName={disabledSubmit} label="Submit" />
                     </div>
                 </div>
 

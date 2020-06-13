@@ -32,12 +32,14 @@ class FeedForm extends Component {
 
     postDataHandler = () => {
         const payload = {
-            date: this.state.date.toISOString().slice(0, 10),
+            date: this.state.date.toDateString(),
             time: this.state.time,
             milk: parseInt(this.state.milk),
             food: [...this.state.food],
             notes: this.state.notes
         };
+
+        console.log(payload.time);
 
         axios.post('https://baby-feeder-uat-185a3.firebaseio.com/feeds.json', payload)
         .then(response => {
@@ -143,11 +145,11 @@ class FeedForm extends Component {
     render() {
         let redirectToFeed =  null;
         if(this.state.hasSubmitted){
-            redirectToFeed =  <Redirect to='/feed' />
+            redirectToFeed = <Redirect to='/summary' />
         }
         return (
             <Aux>
-                <Route path='/feed' exact>
+                <Route path='/summary' exact>
                     <FeedsList {...this.state} componentDidMount={this.componentDidMount.bind(this)}/>
                 </Route>
                 <Route path='/add-feed' exact>

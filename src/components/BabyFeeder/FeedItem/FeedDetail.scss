@@ -5,15 +5,17 @@
     &-details{
         background-color: white;
         @include formStyling;
-        font-family: 'Roboto', sans-serif;
+        box-shadow: none;
+        // font-family: 'Roboto', sans-serif;
         font-size: 14px;
         padding: 10px;
     }
 
     &-item {
-        // border-bottom: solid 1px $color3;
+        border-bottom: dashed 1px #ebedf1;
         margin-bottom: 10px;
-        display: table;
+        display: flex;
+        width: 100%;
 
         &:last-of-type {
             border-bottom: none;
@@ -23,21 +25,24 @@
 
     &-time-container {
         display: table-cell;
+        border-left: solid 3px $color4;
     }
 
     &-time {
-        display: inline-block;
+        // display: inline-block;
         padding: 10px;
-        border-radius: 5px;
-        background-color: $color2;
-        color: white;
-        display: table-cell;
+        // border-radius: 5px;
+        // background-color: $color2;
+        // color: white;
+        // display: table-cell;
     }
 
     &-amount {
-        display: inline-block;
         padding: 10px;
-        display: table-cell;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        width: 100%;
     }
 
 }

@@ -1,12 +1,12 @@
 @import '../../../variables.scss';
 
 .Button {
-    background-color: #71c9ce;
+    background-color: $color1;
     padding: 10px 30px;
     font-size: 14px;
     font-family: $mainFont;
     border: none;
-    color: #fff;
+    color: $color2;
     width: 100%;
     margin-bottom: 30px;
 }
@@ -19,4 +19,8 @@
 .submit {
     background-color: #71c9ce;
 
+}
+
+.hide {
+    display: none;
 }

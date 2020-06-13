@@ -1,13 +1,8 @@
 @import './variables.scss';
-
-
-
 .App {
-  /* text-align: center; */
   /* font-family: 'Roboto', sans-serif; */
-  // font-family: 'Indie Flower', cursive;
   font-family: $mainFont;
-  color: #71c9ce;
+  color: $color1;
 }
 
 label {
@@ -16,5 +11,11 @@ label {
 
 .half-coloumn {
   width: 48%;
+  display: inline-block;
+}
+
+.full-coloumn {
+  margin-top: 10px;
+  width: 100%;
   display: inline-block;
 }

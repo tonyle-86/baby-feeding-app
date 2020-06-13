@@ -1,12 +1,12 @@
 @import '../../../variables.scss';
 
 .AddFeedButton{
-    background-color: #a6e3e9;
-    color: #fff;
+    background-color: $color4;
+    color: $color1;
     position: absolute;
     left: 0;
     right: 0;
-    margin: auto;   
+    margin: 15px auto;   
     font-size: 20px;
     padding: 10px 20px;
     font-family: $mainFont;
@@ -17,4 +17,6 @@
     width: 100px;
     text-align: center;
     display: inline-block;
+    z-index: 10;
+    text-decoration: none;
 }
