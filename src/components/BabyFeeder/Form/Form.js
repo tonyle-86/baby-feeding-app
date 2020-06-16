@@ -3,12 +3,16 @@ import Dropdown from '../../UI/Dropdown/Dropdown';
 import Textarea from '../../UI/Textarea/Textarea';
 import Aux from '../../../hoc/Aux/Aux';
 import Button from '../..//UI/Button/Button';
-import Datepicker from 'react-datepicker';
+import enGb from 'date-fns/locale/en-GB';
+import Datepicker, { registerLocale } from 'react-datepicker';
 import Input from '../../UI/Input/Input';
 import './Form.scss';
 import '../../UI/Datepicker/Datepicker.scss';
+import { Link } from 'react-router-dom';
+registerLocale('en-gb', enGb);
 
 class Form extends Component {
+
     render(){
         const addFoodSection = this.props.food.map((item, idx) => {
             return <div key={idx} className="food-section">
@@ -56,23 +60,22 @@ class Form extends Component {
 
         const disabledSubmit = (this.props.milk === 0 || this.props.milk === '0') && this.props.food.length === 0 && this.props.notes === '' ? 'hide': null;
 
-        console.log(this.props.milk)
-
         return(
 
             <Aux>
 
                 <label>Date:</label>
-                <Datepicker selected={this.props.date} onChange={this.props.handleDateChange} dateFormat="dd/MM/yyyy" />
+                <Datepicker locale="en-gb" selected={this.props.date} onChange={this.props.handleDateChange} dateFormat="dd/MM/yyyy" />
                 <label>Time:</label>
-                <Datepicker
-                    selected={this.props.time} onChange={this.props.handleTimeChange}
+                {/* <Datepicker
+                    selected= onChange={this.props.handleTimeChange}
                     showTimeSelect
                     showTimeSelectOnly
                     timeIntervals={5}
                     timeCaption="Time"
                     dateFormat="h:mm aa"
-                />
+                /> */}
+                <Input type='time' change={this.props.handleTimeChange} defaultValue={this.props.time.toTimeString().slice(0, 5)}/>
                 <Dropdown type="milk" label='Milk' value={this.props.milk} 
                 changeHandler={this.props.milkChangeHandler.bind(this)} />
 
@@ -85,7 +88,10 @@ class Form extends Component {
 
                 <div className="FeedForm--button-container">
                     <div className="half-coloumn">
-                        <Button styleName="cancel" label="Cancel" />
+                        <Link to='/summary'>
+                            <Button styleName="cancel" label="Cancel" />
+                        </Link>
+                        
                     </div>
                     <div className="half-coloumn">
                         <Button clicked={this.props.postDataHandler} styleName={disabledSubmit} label="Submit" />

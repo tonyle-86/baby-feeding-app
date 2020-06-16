@@ -10,6 +10,7 @@ class FeedDetail extends Component {
     render() {
         return (
             <div className="feed-item">
+                <h1>{this.props.test}</h1>
                 <div className="feed-time-container">
                     <div className="feed-time">{new Date(this.props.time).toLocaleTimeString().slice(0,5)}</div>
                 </div>

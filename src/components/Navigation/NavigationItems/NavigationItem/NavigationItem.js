@@ -9,8 +9,15 @@ const navigationItem = () => {
             <li className="NavigationItem">
                 <NavLink to="/summary">Summary</NavLink>
             </li>
-            <li className="NavigationItem"><NavLink to="/add-feed">Add Feed</NavLink></li>
-            <li className="NavigationItem"><NavLink to="/feedback">Feedback</NavLink></li>
+            <li className="NavigationItem">
+                <NavLink to="/add-feed">Add Feed</NavLink>
+            </li>
+            <li className="NavigationItem">
+                <NavLink to="/calendar">Calendar</NavLink>
+            </li>
+            <li className="NavigationItem">
+                <NavLink to="/feedback">Feedback</NavLink>
+            </li>
         </Aux>
     );
 }

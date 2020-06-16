@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
-import { Route, Redirect, NavLink, Switch } from 'react-router-dom';
+import { Route, Redirect, NavLink, Link } from 'react-router-dom';
 import Aux from '../../../hoc/Aux/Aux';
 import axios from 'axios';
 import FeedsList from '../FeedsList/FeedsList';
 import Form from '../Form/Form';
+import Calendar from 'react-calendar';
+import '../../UI/Datepicker/Datepicker.scss';
+import '../../UI/Calendar/Calendar.scss';
+import Button from '../../UI/Button/Button';
+import FeedListSingle from '../FeedListSingle/FeedListSingle';
 
 class FeedForm extends Component {
 
@@ -15,7 +20,8 @@ class FeedForm extends Component {
         food: [],
         feeds: [],
         isLoading: false,
-        hasSubmitted: false
+        hasSubmitted: false,
+        calendarDate: new Date()
     };
 
     handleDateChange = (date) => {
@@ -24,11 +30,21 @@ class FeedForm extends Component {
         });
     };
 
-    handleTimeChange = (time) => {
+    handleTimeChange = (event) => {
+        const x = this.state.date.toISOString().slice(0, 10);
+        const y = event.target.value;
+        const time = x+'T'+y;
+
         this.setState({
-            time: time
-        });
+            time: new Date(time)
+        })
     };
+
+    handleCalendarDateChange = ((calendarDate) => {
+        this.setState({
+            calendarDate: calendarDate
+        });
+    })
 
     postDataHandler = () => {
         const payload = {
@@ -38,8 +54,6 @@ class FeedForm extends Component {
             food: [...this.state.food],
             notes: this.state.notes
         };
-
-        console.log(payload.time);
 
         axios.post('https://baby-feeder-uat-185a3.firebaseio.com/feeds.json', payload)
         .then(response => {
@@ -93,14 +107,7 @@ class FeedForm extends Component {
                     isLoading: false,
                     hasSubmitted: false
                 });
-
-
-                
             }
-
-
-
-            
         })
         .catch(error => {
             console.log(error);
@@ -163,6 +170,21 @@ class FeedForm extends Component {
                         notesHandler={this.notesHandler.bind(this)}
                         postDataHandler={this.postDataHandler.bind(this)}
                     />
+                </Route>
+                <Route path='/calendar'>
+                    <Calendar onChange={this.handleCalendarDateChange} value={this.state.calendarDate}/>
+                    <Link to={{
+                        pathname: '/by-day',
+                        search: `?date=${this.state.calendarDate.toLocaleDateString().slice(0,10)}`
+                    }}>
+                        <Button label='Submit' selectedDate={this.state.calendarDate} />
+                    </Link>
+                </Route>
+                <Route path='/by-day'>
+                    <FeedListSingle {...this.state} />
+                </Route>
+                <Route path='/feedback'>
+                    <h1>Feedback</h1>
                 </Route>
 
                 {redirectToFeed}

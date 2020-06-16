@@ -8,12 +8,12 @@ import NavigationItems from '../Navigation/NavigationItems/NavigationItems';
 
 class Topbar extends Component {
     state = {
-        navActive: true
+        navInactive: true
     }
 
     hamburgerHandler = () => {
         this.setState((prevState) => {
-            return { navActive: !prevState.navActive };
+            return { navInactive: !prevState.navInactive };
         });
     }
 
@@ -21,19 +21,20 @@ class Topbar extends Component {
 
         let backdrop;
 
-        if (!this.state.navActive) {
-            backdrop = <Backdrop navActive={this.state.navActive} clicked={this.hamburgerHandler}>
+        if (!this.state.navInactive) {
+            backdrop = <Backdrop navInactive={this.state.navInactive} clicked={this.hamburgerHandler}>
                 <NavigationItems />
             </Backdrop>
         }
 
         return (
             <div className="Topbar">
-                <Hamburger navActive={this.state.navActive} clicked={this.hamburgerHandler}/>
+                <Hamburger navInactive={this.state.navInactive} clicked={this.hamburgerHandler}/>
+                <span className='logo'>Baby feeding tracker</span>
                 {backdrop}
                 {/* <Logo /> */}
                 {/* <NavigationItems /> */}
-                <AddFeedButton label="Add Feed" />
+                {/* <AddFeedButton label="Add Feed" /> */}
             </div>
         )
     }
