@@ -2,12 +2,12 @@
 
 .react-calendar {
   width: 100%;
-  max-width: 100%;
+  max-width: 500px;
   background: white;
   border: 1px solid #a0a096;
   font-family: $mainFont;
   line-height: 1.125em;
-  margin-bottom: 10px;
+  margin: 0 auto 10px;
 }
 .react-calendar--doubleView {
   width: 700px;
@@ -116,12 +116,12 @@
   color: $color1
 }
 .react-calendar__tile--active {
-  background: $color1;
-  color: white;
+  background: $color4;
+  color:$color1;
 }
 .react-calendar__tile--active:enabled:hover,
 .react-calendar__tile--active:enabled:focus {
-  background: $color1;
+  background: $color3;
 }
 .react-calendar--selectRange .react-calendar__tile--hover {
   background-color: #e6e6e6;

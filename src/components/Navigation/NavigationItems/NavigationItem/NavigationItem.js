@@ -1,6 +1,6 @@
 import React from 'react';
 import './NavigationItem.scss';
-import { Route, Redirect, NavLink, Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import Aux from '../../../../hoc/Aux/Aux';
 
 const navigationItem = () => {

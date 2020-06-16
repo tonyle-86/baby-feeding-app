@@ -24,7 +24,6 @@ class FeedDate extends Component {
                 <div className="feed-details">
                     <h3 className="feed-total">Total milk today: {this.props.total}ml</h3>
                     {this.props.children}
-                
                 </div>
                 
             </div>

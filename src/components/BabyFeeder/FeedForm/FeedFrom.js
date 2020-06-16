@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Redirect, NavLink, Link } from 'react-router-dom';
+import { Route, Redirect, Link } from 'react-router-dom';
 import Aux from '../../../hoc/Aux/Aux';
 import axios from 'axios';
 import FeedsList from '../FeedsList/FeedsList';
@@ -21,7 +21,9 @@ class FeedForm extends Component {
         feeds: [],
         isLoading: false,
         hasSubmitted: false,
-        calendarDate: new Date()
+        calendarDate: new Date(),
+        nextDate: new Date(),
+        prevDate: new Date()
     };
 
     handleDateChange = (date) => {
@@ -121,7 +123,32 @@ class FeedForm extends Component {
     }
 
     componentDidMount() {
-        this.fetchFeedsData()
+        this.fetchFeedsData();
+        this.nextDateHandler()
+        this.prevDateHandler();
+
+        let params = (new URL(document.location)).searchParams;
+        let date = params.get('date');
+
+        let activeDate,
+            nextDate,
+            prevDate
+
+        if (date) {
+            const formattedDate = `${date.slice(3, 5)}/${date.slice(0, 2)}/${date.slice(6, 10)}`
+            activeDate = new Date(formattedDate).toString().slice(0, 15);
+            nextDate = new Date(formattedDate);
+            prevDate = new Date(formattedDate);
+            nextDate.setDate(nextDate.getDate() + 1);
+            prevDate.setDate(prevDate.getDate() - 1);
+        }
+
+        this.setState({
+            calendarDate: date ? new Date(activeDate) : new Date(),
+            nextDate: date ? new Date(nextDate): null,
+            prevDate: date ? new Date(prevDate) : null
+        })
+
     }
 
     addAdditionalFoodHandler = () => {
@@ -146,6 +173,27 @@ class FeedForm extends Component {
     notesHandler = event => {
         this.setState({
             notes: event.target.value
+        })
+    }
+
+    nextDateHandler = () => {
+        let myDate = new Date(this.state.calendarDate);
+
+        this.setState({
+            calendarDate: new Date(myDate.setDate(myDate.getDate() + 1)),
+            nextDate: new Date(myDate.setDate(myDate.getDate() + 1)),
+            prevDate: new Date(myDate.setDate(myDate.getDate() - 2))
+        }
+    )}
+
+
+    prevDateHandler = () => {
+        let myDate = new Date(this.state.calendarDate);
+
+        this.setState({
+            calendarDate: new Date(myDate.setDate(myDate.getDate() - 1)),
+            nextDate: new Date(myDate.setDate(myDate.getDate() + 1)),
+            prevDate: new Date(myDate.setDate(myDate.getDate() - 2))
         })
     }
 
@@ -177,11 +225,12 @@ class FeedForm extends Component {
                         pathname: '/by-day',
                         search: `?date=${this.state.calendarDate.toLocaleDateString().slice(0,10)}`
                     }}>
-                        <Button label='Submit' selectedDate={this.state.calendarDate} />
+                        <Button label='Submit' selectedDate={this.state.calendarDate} clicked={this.nextDateHandler}/>
                     </Link>
                 </Route>
                 <Route path='/by-day'>
-                    <FeedListSingle {...this.state} />
+                    <FeedListSingle title={`Feed for ${this.state.calendarDate.toString().slice(0, 15)}`} {...this.state} nextDateHandler={this.nextDateHandler.bind(this)
+                    } prevDateHandler={this.prevDateHandler.bind(this)} componentDidMount={this.componentDidMount.bind(this)}/>
                 </Route>
                 <Route path='/feedback'>
                     <h1>Feedback</h1>
