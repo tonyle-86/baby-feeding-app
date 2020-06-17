@@ -16,9 +16,15 @@
         margin-bottom: 10px;
         display: flex;
         width: 100%;
+        background-color: transparent;
+        transition: background-color .3s linear;
 
         &:last-of-type {
             border-bottom: none;
+        }
+
+        &:hover {
+            background-color: $color3;
         }
 
     }

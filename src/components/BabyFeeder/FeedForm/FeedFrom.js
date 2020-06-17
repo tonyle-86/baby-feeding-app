@@ -157,6 +157,16 @@ class FeedForm extends Component {
         }));
     }
 
+    removeFoodHandler = (idx) => {
+        let newFood = [...this.state.food];
+        newFood.splice(idx,1);
+        console.log('array', newFood);
+
+        this.setState({
+            food: newFood
+        })
+    }
+
     foodChangeHandler = () => {
         const { food } = this.state;
         this.setState({
@@ -186,7 +196,6 @@ class FeedForm extends Component {
         }
     )}
 
-
     prevDateHandler = () => {
         let myDate = new Date(this.state.calendarDate);
 
@@ -213,6 +222,7 @@ class FeedForm extends Component {
                         handleTimeChange={this.handleTimeChange.bind(this)}
                         milkChangeHandler={this.milkChangeHandler.bind(this)}
                         addAdditionalFoodHandler={this.addAdditionalFoodHandler.bind(this)}
+                        removeFoodHandler={this.removeFoodHandler.bind(this)}
                         foodChangeHandler={this.foodChangeHandler.bind(this)}
                         foodQuantityHandler={this.foodChangeHandler.bind(this)} 
                         notesHandler={this.notesHandler.bind(this)}

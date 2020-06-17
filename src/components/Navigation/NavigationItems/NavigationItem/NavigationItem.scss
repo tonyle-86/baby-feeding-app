@@ -1,18 +1,29 @@
 .NavigationItem {
     // display: inline-block;
-    padding: 15px;
+    padding: 20px;
     border-bottom: 3px solid transparent;
     display: block;
-}
-
-.NavigationItem:hover,
-.NavigationItem:active  {
-    border-bottom: 3px solid white;
+    width: 100%;
+    box-sizing: border-box;    
 }
 
 .NavigationItem a {
     color: white;
     text-decoration: none;
+    width: 100%;
+    display: block;
+    transform: scale(1);
+    transition: transform .2s linear
+}
+
+.NavigationItem a:hover,
+.NavigationItem a:active  {
+    text-decoration: none;
+    width: 100%;
+    display: block;
+    transform: scale(1.2);
+    font-weight: bold;
+
 }
 
 

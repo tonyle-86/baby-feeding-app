@@ -1,4 +1,5 @@
 @import './variables.scss';
+@import './assets/font-awesome-4.7.0/scss/font-awesome.scss';
 .App {
   /* font-family: 'Roboto', sans-serif; */
   font-family: $mainFont;
@@ -9,13 +10,52 @@ label {
   display: block;
 }
 
+.mini-coloumn {
+  width: 5%;
+  display: inline-block;  
+  text-align: center;
+}
+
 .half-coloumn {
-  width: 48%;
+  width: 45%;
   display: inline-block;
+
 }
 
 .full-coloumn {
   margin-top: 10px;
   width: 100%;
   display: inline-block;
+}
+
+.inline-block {
+  display: inline-block
+}
+
+.fl{
+  float: left;
+}
+
+.fr{
+  float: right;
+}
+
+// .half-width,
+// .Button.half-width {
+//   width: 50%;
+// }
+
+
+.icon {
+  display: inline-block;
+  margin-top: 5px;
+}
+
+.fa-minus-circle {
+  color: $color4;
+  transition: all 0.4s linear;
+  cursor: pointer;
+  &:hover {
+    color: $color3;
+  }
 }

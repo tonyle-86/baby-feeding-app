@@ -14,10 +14,12 @@ registerLocale('en-gb', enGb);
 class Form extends Component {
 
     render(){
+        
         const addFoodSection = this.props.food.map((item, idx) => {
             return <div key={idx} className="food-section">
+
                 <div className="half-coloumn">
-                    <Dropdown  type="food"
+                    <Dropdown type="food"
                         className="dropdown-food"
                         value={this.props.food[idx].name}
                         changeHandler={event => {
@@ -45,16 +47,27 @@ class Form extends Component {
                         }}
                     />
                 </div>
+
+                <div className='mini-coloumn'>                
+                    <span className='icon' onClick={() => this.props.removeFoodHandler(idx)}>   
+                        <i className="fa fa-minus-circle fa-2x" aria-hidden="true"></i>                                  
+                    </span>
+                </div>
+                
             </div>
 
         });
 
         let foodLabels;
 
+        
+
         if (this.props.food.length >= 1) {
             foodLabels = <div className="food-section">
                 <div className="half-coloumn"><label>Food:</label></div>
                 <div className="half-coloumn"><label>Quantity:</label></div>
+                <div className='mini-coloumn'></div>
+                
             </div>
         }
 
@@ -63,18 +76,9 @@ class Form extends Component {
         return(
 
             <Aux>
-
                 <label>Date:</label>
                 <Datepicker locale="en-gb" selected={this.props.date} onChange={this.props.handleDateChange} dateFormat="dd/MM/yyyy" />
                 <label>Time:</label>
-                {/* <Datepicker
-                    selected= onChange={this.props.handleTimeChange}
-                    showTimeSelect
-                    showTimeSelectOnly
-                    timeIntervals={5}
-                    timeCaption="Time"
-                    dateFormat="h:mm aa"
-                /> */}
                 <Input type='time' change={this.props.handleTimeChange} defaultValue={this.props.time.toTimeString().slice(0, 5)}/>
                 <Dropdown type="milk" label='Milk' value={this.props.milk} 
                 changeHandler={this.props.milkChangeHandler.bind(this)} />
@@ -94,7 +98,7 @@ class Form extends Component {
                         
                     </div>
                     <div className="half-coloumn">
-                        <Button clicked={this.props.postDataHandler} styleName={disabledSubmit} label="Submit" />
+                        <Button clicked={this.props.postDataHandler} styleName={`${disabledSubmit} submit`} label="Submit" />
                     </div>
                 </div>
 

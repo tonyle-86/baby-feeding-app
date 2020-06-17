@@ -6,18 +6,35 @@
     font-size: 14px;
     font-family: $mainFont;
     border: none;
-    color: $color2;
     width: 100%;
     margin-bottom: 30px;
+    transition: background-color 0.4s linear;
+    cursor: pointer;
+
+    color: $color2;
+    &:hover {
+        background-color: $color3;
+        color: $color1;
+    }
 }
 
 .cancel {
-    background-color: #cbf1f5;
+    background-color: $color3;
     color: $color1;
+
+    &:hover {
+        background-color: $color1;
+        color: $color2;
+    }
 }
 
 .submit {
-    background-color: #71c9ce;
+    background-color: $color1;
+    color: $color2;
+    &:hover {
+        background-color: $color3;
+        color: $color1;
+    }
 
 }
 
