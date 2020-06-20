@@ -99,12 +99,15 @@
 .react-calendar__tile:enabled:focus {
   background-color: #e6e6e6;
 }
-.react-calendar__tile--now {
-  background: $color4;
+button.react-calendar__tile--now {
+  border: solid 2px $color3;
+  background: $color1;
+  color: $color2
 }
 .react-calendar__tile--now:enabled:hover,
 .react-calendar__tile--now:enabled:focus {
   background: $color4;
+  color: $color1
 }
 .react-calendar__tile--hasActive {
   background: $color1;
@@ -116,7 +119,7 @@
   color: $color1
 }
 .react-calendar__tile--active {
-  background: $color4;
+  background: $color3;
   color:$color1;
 }
 .react-calendar__tile--active:enabled:hover,

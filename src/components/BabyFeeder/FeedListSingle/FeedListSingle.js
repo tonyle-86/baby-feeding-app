@@ -18,30 +18,30 @@ class FeedListSingle extends Component {
         return new Date(formattedDate).toString().slice(0, 15);
     }
 
-    nextDate = () => {
-        let myDate = new Date(this.props.calendarDate);
-        myDate.setDate(myDate.getDate() + 1);
-
-        // this.setState({
-        //     nextDate: myDate.toLocaleDateString().slice(0, 10)
-        // }) 
-    }
-
     render() {
 
-        const feeds = Object.keys(this.props.feeds);
+        //const feeds = Object.keys(this.props.feeds);
 
         let selectedDate;
         let filterByDate;
 
-        filterByDate = feeds.filter(i => {
+        filterByDate = this.props.test.filter(i => {
             selectedDate = this.getDate();
-            return i === selectedDate;
+            return i[0] === selectedDate;
         }).map((x) => {
-            return this.props.feeds[x].map((item, idx) => {
+            return x[1].map((item, idx) => {
                 return <FeedDetail time={item.time} key={idx} milk={item.milk} notes={item.notes} />
             })
         })
+
+        // filterByDate = feeds.filter(i => {
+        //     selectedDate = this.getDate();
+        //     return i === selectedDate;
+        // }).map((x) => {
+        //     return this.props.feeds[x].map((item, idx) => {
+        //         return <FeedDetail time={item.time} key={idx} milk={item.milk} notes={item.notes} />
+        //     })
+        // })
 
         // let getMilkTotal = feeds.map((item, idx) => {
         //     return this.props.feeds[item].reduce((a, cv) => {
@@ -73,14 +73,14 @@ class FeedListSingle extends Component {
                         <Link to={{
                             pathname: '/by-day',
                             search: `?date=${this.props.prevDate.toLocaleDateString().slice(0, 10)}`}}>
-                            <Button icon='fa fa-chevron-left fl' styleName='half-width' label='Prev' clicked={this.props.prevDateHandler} />
+                            <Button icon='fa fa-chevron-left prev fl' styleName='half-width' label='Prev' clicked={this.props.prevDateHandler} />
                         </Link>
                     </div>
                     <div className='half-coloumn'>
                         <Link to={{
                             pathname: '/by-day',
                             search: `?date=${this.props.nextDate.toLocaleDateString().slice(0, 10)}`}}>
-                            <Button icon='fa fa-chevron-right fr' styleName='half-width fr' label='Next' clicked={this.props.nextDateHandler} />
+                            <Button icon='fa fa-chevron-right next fr' styleName='half-width fr' label='Next' clicked={this.props.nextDateHandler} />
                         </Link>
                     </div>
                 </div>

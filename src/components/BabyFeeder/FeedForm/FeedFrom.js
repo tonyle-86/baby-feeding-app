@@ -19,16 +19,20 @@ class FeedForm extends Component {
         notes: '',
         food: [],
         feeds: [],
+        feedsLength: 0,
         isLoading: false,
         hasSubmitted: false,
         calendarDate: new Date(),
         nextDate: new Date(),
-        prevDate: new Date()
+        prevDate: new Date(),
+        test: [],
+        noOfResults: 2
     };
 
     handleDateChange = (date) => {
         this.setState({
-            date: date
+            date: date,
+            time: new Date(date)
         });
     };
 
@@ -104,11 +108,27 @@ class FeedForm extends Component {
 
                 const feedsGroupedByDate = groupBy(sortByDateArr, 'date');
 
+                // let noOfResults = 2;
+
+                let testLength = Object.entries(feedsGroupedByDate).length;
+
+                console.log(testLength);
+
+                let test = Object.entries(feedsGroupedByDate).slice(0,this.state.noOfResults);
+
+                // console.log(test);
+
+                // console.log(test);
+
                 this.setState({
                     feeds: feedsGroupedByDate,
                     isLoading: false,
-                    hasSubmitted: false
+                    hasSubmitted: false,
+                    feedsLength: testLength,
+                    test: test
                 });
+
+                // console.log(this.state.test)
             }
         })
         .catch(error => {
@@ -160,7 +180,6 @@ class FeedForm extends Component {
     removeFoodHandler = (idx) => {
         let newFood = [...this.state.food];
         newFood.splice(idx,1);
-        console.log('array', newFood);
 
         this.setState({
             food: newFood
@@ -206,15 +225,29 @@ class FeedForm extends Component {
         })
     }
 
+    loadMore = () => {
+        this.fetchFeedsData();
+        this.setState(prevState => ({
+            noOfResults: prevState.noOfResults + 3, 
+        })
+    )}
+
     render() {
-        let redirectToFeed =  null;
+        let redirectToFeed, loadMore =  null;
+
         if(this.state.hasSubmitted){
             redirectToFeed = <Redirect to='/summary' />
         }
+
+        if (this.state.noOfResults < this.state.feedsLength) {
+            loadMore = <Button styleName='width-100' label='Load more' clicked={this.loadMore} />
+        }
+
         return (
             <Aux>
                 <Route path='/summary' exact>
                     <FeedsList {...this.state} componentDidMount={this.componentDidMount.bind(this)}/>
+                    {loadMore}
                 </Route>
                 <Route path='/add-feed' exact>
                     <Form {...this.state} 
@@ -235,12 +268,11 @@ class FeedForm extends Component {
                         pathname: '/by-day',
                         search: `?date=${this.state.calendarDate.toLocaleDateString().slice(0,10)}`
                     }}>
-                        <Button label='Submit' selectedDate={this.state.calendarDate} clicked={this.nextDateHandler}/>
+                        <Button label='Proceed' selectedDate={this.state.calendarDate} clicked={this.nextDateHandler}/>
                     </Link>
                 </Route>
                 <Route path='/by-day'>
-                    <FeedListSingle title={`Feed for ${this.state.calendarDate.toString().slice(0, 15)}`} {...this.state} nextDateHandler={this.nextDateHandler.bind(this)
-                    } prevDateHandler={this.prevDateHandler.bind(this)} componentDidMount={this.componentDidMount.bind(this)}/>
+                    <FeedListSingle title={`Feed for ${this.state.calendarDate.toString().slice(0, 15)}`} {...this.state} nextDateHandler={this.nextDateHandler.bind(this)} prevDateHandler={this.prevDateHandler.bind(this)} componentDidMount={this.componentDidMount.bind(this)}/>
                 </Route>
                 <Route path='/feedback'>
                     <h1>Feedback</h1>

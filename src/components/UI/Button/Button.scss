@@ -6,7 +6,6 @@
     font-size: 14px;
     font-family: $mainFont;
     border: none;
-    width: 100%;
     margin-bottom: 30px;
     transition: background-color 0.4s linear;
     cursor: pointer;
@@ -15,6 +14,14 @@
     &:hover {
         background-color: $color3;
         color: $color1;
+    }
+
+    .next {
+        margin: 4px 0 4px 10px
+    }
+
+    .prev {
+        margin: 4px 10px 4px 0
     }
 }
 

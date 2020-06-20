@@ -439,7 +439,11 @@
 
 
 .react-datepicker__day {
-  color: $color1
+  color: $color1;
+
+  &--outside-month {
+    color: $color3
+  }
 }
 
 .react-datepicker__month--selected, .react-datepicker__month--in-selecting-range, .react-datepicker__month--in-range,
