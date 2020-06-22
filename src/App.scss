@@ -8,6 +8,13 @@
 
 label {
   display: block;
+  font-weight: bold;
+}
+
+.coloumn-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .mini-coloumn {
@@ -17,9 +24,16 @@ label {
 }
 
 .half-coloumn {
-  width: 45%;
+  width: 48%;
   display: inline-block;
 
+  &--alt {
+    width: 45%
+  }
+}
+
+.trash {
+  width: 5%;
 }
 
 .full-coloumn {
@@ -49,17 +63,39 @@ label {
 //   width: 50%;
 // }
 
+.link-container {
+  margin: 10px 10px 10px 0;
+
+  a {
+    color: $color1;
+  }
+}
+
 
 .icon {
   display: inline-block;
-  margin-top: 5px;
+  margin-top: 7px;
 }
 
-.fa-minus-circle {
+.fa {
   color: $color4;
   transition: all 0.4s linear;
   cursor: pointer;
   &:hover {
     color: $color3;
+  }
+
+  &.fa-frown-o {
+    color: $color1
+  }
+
+  &.fa-arrow-left {
+    display: inline-block;
+    margin-right: 10px;
+    color: $color1
+  }
+
+  &.fa-1-5x{
+    font-size: 1.5em;
   }
 }
