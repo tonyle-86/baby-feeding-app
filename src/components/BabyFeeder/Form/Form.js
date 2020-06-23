@@ -16,10 +16,11 @@ class Form extends Component {
     render(){
         
         const addFoodSection = this.props.food.map((item, idx) => {
-            return <div key={idx} className='food-section'>
+            return <div key={idx} className='coloumn-container'>
 
-                <div className='half-coloumn'>
+                <div className='half-coloumn half-coloumn--alt'>
                     <Dropdown type='food'
+                        foodOptionsArr={this.props.foodOptionsArr}
                         className='dropdown-food'
                         value={this.props.food[idx].name}
                         changeHandler={event => {
@@ -32,9 +33,12 @@ class Form extends Component {
                         }}
                     />
                 </div>
-
-                <div className='half-coloumn'>
+                
+                <div className='half-coloumn half-coloumn--alt'>
                     <Input key={idx}
+                        
+                        type='number'
+                        pattern='\d*'
                         className='quantity-food'
                         value={this.props.food[idx].quantity}
                         change={event => {
@@ -48,9 +52,9 @@ class Form extends Component {
                     />
                 </div>
 
-                <div className='mini-coloumn'>                
+                <div className='trash'>                
                     <span className='icon' onClick={() => this.props.removeFoodHandler(idx)}>   
-                        <i className='fa fa-minus-circle fa-2x' aria-hidden='true'></i>                                  
+                        <i className='fa fa-trash-o fa-1-5x' aria-hidden='true'></i>                                  
                     </span>
                 </div>
                 
@@ -63,10 +67,10 @@ class Form extends Component {
         
 
         if (this.props.food.length >= 1) {
-            foodLabels = <div className='food-section'>
-                <div className='half-coloumn'><label>Food:</label></div>
-                <div className='half-coloumn'><label>Quantity:</label></div>
-                <div className='mini-coloumn'></div>
+            foodLabels = <div className='coloumn-container'>
+                <div className='half-coloumn half-coloumn--alt'><label>Food:</label></div>
+                <div className='half-coloumn half-coloumn--alt'><label>Quantity:</label></div>
+                <div className='trash'></div>
                 
             </div>
         }
@@ -76,10 +80,16 @@ class Form extends Component {
         return(
 
             <Aux>
+                <div className='coloumn-container'>
+                    <div className='half-coloumn'>
                 <label>Date:</label>
                 <Datepicker locale='en-gb' selected={this.props.date} onChange={this.props.handleDateChange} dateFormat='dd/MM/yyyy' />
-                <label>Time:</label>
+                
+                    </div>
+                    <div className='half-coloumn'>
+                    <label>Time:</label>
                 <Input type='time' change={this.props.handleTimeChange} defaultValue={this.props.time.toTimeString().slice(0, 5)}/>
+                    </div></div>
                 <Dropdown type='milk' label='Milk' value={this.props.milk} 
                 changeHandler={this.props.milkChangeHandler.bind(this)} />
 
@@ -90,7 +100,7 @@ class Form extends Component {
 
                 <Textarea label='Notes' changeHandler={this.props.notesHandler.bind(this)}/>
 
-                <div className='FeedForm--button-container'>
+                <div className='coloumn-container'>
                     <div className='half-coloumn'>
                         <Link to='/summary'>
                             <Button styleName='cancel width-100' label='Cancel'/>

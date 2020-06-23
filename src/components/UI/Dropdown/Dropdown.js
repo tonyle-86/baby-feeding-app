@@ -15,7 +15,7 @@ class Dropdown extends Component {
                 optionsArr.push(i);
             }
         } else {
-            optionsArr = ['Chao', 'Rice', 'Carrots', 'Chicken'];
+            optionsArr = this.props.foodOptionsArr;
         }
 
         const optionsItems = optionsArr.map((i) => {

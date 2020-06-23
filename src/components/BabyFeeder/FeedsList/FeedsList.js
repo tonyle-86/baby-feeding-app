@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import FeedDate from '../FeedItem/FeedDate';
+import FeedDateItem from '../FeedItem/FeedDateItem';
 import FeedDetail from '../FeedItem/FeedDetail';
 import Aux from '../../../hoc/Aux/Aux';
 
@@ -33,7 +33,7 @@ class FeedsList extends Component {
         } else {      
             // groupDates = feeds.map((item, idx) => {
             //     console.log(this.props.feeds[item]);
-            //     return <FeedDate key={idx} date={item} total={getMilkTotal[idx]}>
+            //     return <FeedDateItem key={idx} date={item} total={getMilkTotal[idx]}>
             //         {this.props.feeds[item].map(x => {
             //         let foodEatenAtTime;
             //         if (x.food) {
@@ -43,11 +43,11 @@ class FeedsList extends Component {
             //         }
 
             //         return <FeedDetail food={x.food ? foodEatenAtTime : null} key={x.time + x.milk + getMilkTotal[idx]} milk={x.milk} time={x.time} notes={x.notes} />
-            //     })}</FeedDate>
+            //     })}</FeedDateItem>
             // })
 
             groupDates = this.props.test.map((item,idx) => {
-                return <FeedDate key={idx} date={item[1][0].date} total={getMilkTotal[idx]}>
+                return <FeedDateItem key={idx} date={item[1][0].date} total={getMilkTotal[idx]}>
                     {item[1].map((x,idx) => {
 
                     let foodEatenAtTime;
@@ -59,7 +59,7 @@ class FeedsList extends Component {
 
                     return <FeedDetail food={x.food ? foodEatenAtTime : null} key={x.time + x.milk + getMilkTotal[idx]} milk={x.milk} time={x.time} notes={x.notes} />
                 })}
-                </FeedDate>
+                </FeedDateItem>
             })
         }
 

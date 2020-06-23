@@ -3,6 +3,8 @@ import FeedDetail from '../FeedItem/FeedDetail';
 import Aux from '../../../hoc/Aux/Aux';
 import { Link } from 'react-router-dom';
 import Button from '../../UI/Button/Button';
+import FeedTotal from '../FeedItem/FeedTotal';
+import FeedDate from '../FeedItem/FeedDate';
 
 class FeedListSingle extends Component {
 
@@ -20,55 +22,64 @@ class FeedListSingle extends Component {
 
     render() {
 
-        //const feeds = Object.keys(this.props.feeds);
+        const feeds = Object.keys(this.props.feeds);
 
         let selectedDate;
         let filterByDate;
 
-        filterByDate = this.props.test.filter(i => {
-            selectedDate = this.getDate();
-            return i[0] === selectedDate;
-        }).map((x) => {
-            return x[1].map((item, idx) => {
-                return <FeedDetail time={item.time} key={idx} milk={item.milk} notes={item.notes} />
-            })
-        })
-
-        // filterByDate = feeds.filter(i => {
+        // filterByDate = this.props.test.filter(i => {
         //     selectedDate = this.getDate();
-        //     return i === selectedDate;
+        //     return i[0] === selectedDate;
         // }).map((x) => {
-        //     return this.props.feeds[x].map((item, idx) => {
+        //     return x[1].map((item, idx) => {
         //         return <FeedDetail time={item.time} key={idx} milk={item.milk} notes={item.notes} />
         //     })
         // })
 
-        // let getMilkTotal = feeds.map((item, idx) => {
-        //     return this.props.feeds[item].reduce((a, cv) => {
-        //         return a + cv.milk
-        //     }, 0)
-        // });
+        filterByDate = feeds.filter(i => {
+            selectedDate = this.getDate();
+            return i === selectedDate;
+        }).map((x) => {
+            return this.props.feeds[x].map((item, idx) => {
+                return <FeedDetail time={item.time} key={idx} milk={item.milk} notes={item.notes}/>
+            })
+        })
 
-        // console.log(getMilkTotal)
+        let milkTotal = feeds.filter(i => {
+            selectedDate = this.getDate();
+            return i === selectedDate;
+        }).map((x) => {
+            console.log(this.props.feeds[x]);
+            return this.props.feeds[x].reduce((a, cv) => {
+                return a + cv.milk
+            },0)
+        })
 
         if(filterByDate.length === 0){
-            filterByDate = <h3>There are no feeds recorded for this day :(</h3>
+            filterByDate = <h3>There are no feeds recorded for this day <span><i className="fa fa-frown-o" aria-hidden="true"></i></span></h3>
         };
+
+        if (milkTotal.length) {
+            milkTotal = <FeedTotal feedTotal={milkTotal} />
+        }
 
         return(
             <Aux>
-                <h3 className='inline-block'>{this.props.title}</h3>
-                <Link to='/calendar'>
-                    <span className='icon fr'>
-                        <i className="fa fa-chevron-left" aria-hidden="true"></i>
-                        <strong>Back to calender</strong>
-                    </span>
-                </Link>
+                <FeedDate month={new Date(this.props.calendarDate).getMonth().toString()} days={new Date(this.props.calendarDate).getDay().toString()} date={new Date(this.props.calendarDate).getDate().toString()} />
+                <div className='link-container'>
+                    <Link to='/calendar'>
+                        <span className='icon'>
+                            <i className="fa fa-arrow-left" aria-hidden="true"></i>
+                            <strong>Back to calender <i className="fa fa-calendar fa-1x" aria-hidden="true"></i></strong>
+                        </span>
+                    </Link>
+                </div>
                 <div className="feed-details">
+                    {milkTotal}
                     {filterByDate}
                 </div>
 
-                <div className='food-section'>
+                <div className='coloumn-container'>
                     <div className='half-coloumn'>
                         <Link to={{
                             pathname: '/by-day',

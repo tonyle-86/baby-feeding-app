@@ -16,8 +16,11 @@ const navigationItem = () => {
                 <NavLink to="/calendar">Calendar</NavLink>
             </li>
             <li className="NavigationItem">
-                <NavLink to="/feedback">Feedback</NavLink>
+                <NavLink to="/config">Config</NavLink>
             </li>
+            {/* <li className="NavigationItem">
+                <NavLink to="/feedback">Feedback</NavLink>
+            </li> */}
         </Aux>
     );
 }

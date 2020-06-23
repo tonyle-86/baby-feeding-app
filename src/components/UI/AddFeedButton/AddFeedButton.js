@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom';
 
 const addFeedButton = (props) => {
     return (
-        <Link to='/add-feed' className="AddFeedButton">{props.label}</Link>
+        <Link to='/add-feed' className="AddFeedButton fr">
+            <i className="fa fa-baby-bottle fa-2x" aria-hidden="true"></i>
+        </Link>
     )
 }
 

@@ -42,7 +42,7 @@
 }
 .react-calendar__navigation button {
     font-family: $mainFont;
-    font-size: 25px;
+    font-size: 18px;
     min-width: 44px;
     background: none;
     font-weight: bold;
@@ -89,7 +89,7 @@
 .react-calendar__tile {
   max-width: 100%;
   text-align: center;
-  padding: 1.75em 0.5em;
+  padding: 1em 0.5em;
   background: none;
 }
 .react-calendar__tile:disabled {

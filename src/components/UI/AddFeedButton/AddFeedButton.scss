@@ -1,22 +1,8 @@
 @import '../../../variables.scss';
 
 .AddFeedButton{
-    background-color: $color4;
-    color: $color1;
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin: 15px auto;   
-    font-size: 20px;
-    padding: 10px 20px;
-    font-family: $mainFont;
-    box-shadow: 0 8px 10px 2px rgba(0,0,0,.01), 
-    2px 4px 10px 2px rgba(0,0,0,.03), 
-    -2px 4px 10px 2px rgba(0,0,0,.03);
-    border: 1px solid #ebedf1;
-    width: 100px;
-    text-align: center;
+    color: $color2;
     display: inline-block;
-    z-index: 10;
     text-decoration: none;
+    margin: -5px 0 0 0;
 }

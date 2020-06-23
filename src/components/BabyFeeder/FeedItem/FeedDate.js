@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import './FeedDate.scss';
+// import '../FeedDate.scss';
 
 class FeedDate extends Component {
 
-    render(){
+    render() {
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
         const nth = (d) => {
             if (d > 3 && d < 21) return 'th';
@@ -18,17 +18,7 @@ class FeedDate extends Component {
         }
 
         return (
-            <div className='group-feed'>
-                <h3 className="feed-date">{days[new Date(this.props.date).getDay()]} {new Date(this.props.date).getDate()}{nth(new Date(this.props.date).getDate())} {months[new Date(this.props.date).getMonth()]}</h3>
-
-                <div className="feed-details">
-                    <h3 className="feed-total">Total milk today: {this.props.total}ml</h3>
-                    {this.props.children}
-                </div>
-                
-            </div>
-
-            
+            <h3 className="feed-date">{days[this.props.days]} {this.props.date}{nth(this.props.date)} {months[this.props.month]}</h3>
         )
     }
 }
