@@ -80,6 +80,7 @@ class Form extends Component {
         return(
 
             <Aux>
+                <h2>{this.props.label} <i className="fa fa-cutlery" aria-hidden="true"></i></h2>
                 <div className='coloumn-container'>
                     <div className='half-coloumn'>
                 <label>Date:</label>

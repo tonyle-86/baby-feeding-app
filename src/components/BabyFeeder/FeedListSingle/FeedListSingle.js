@@ -49,7 +49,6 @@ class FeedListSingle extends Component {
             selectedDate = this.getDate();
             return i === selectedDate;
         }).map((x) => {
-            console.log(this.props.feeds[x]);
             return this.props.feeds[x].reduce((a, cv) => {
                 return a + cv.milk
             },0)

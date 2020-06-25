@@ -1,0 +1,15 @@
+@import '../../variables.scss';
+
+.food-items {
+    margin: 10px 0;
+    padding: 0;
+
+    .food-item {
+        background-color: $color3;
+        padding: 5px;
+        margin: 5px;
+        border-radius: 5px;
+        list-style: none;
+    }
+    
+}

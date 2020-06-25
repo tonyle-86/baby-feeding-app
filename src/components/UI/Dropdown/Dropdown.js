@@ -15,7 +15,21 @@ class Dropdown extends Component {
                 optionsArr.push(i);
             }
         } else {
-            optionsArr = this.props.foodOptionsArr;
+                optionsArr = ['Chao', 'Carrots', 'Chicken', 'Spinach', 'Butternut Squash', 'Brocolli', 'Courgettes', 'Potato', 'Sweet Potato', 'Banana', 'Pear', 'Yogurt'];
+
+            optionsArr = [...optionsArr, ...this.props.foodOptionsArr].sort((a, b) => {
+                if (a < b) {
+                    return -1;
+                }
+
+                if (a > b) {
+                    return 1;
+                }
+                return 0;
+            });;
+
+                
+  
         }
 
         const optionsItems = optionsArr.map((i) => {

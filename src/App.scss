@@ -78,15 +78,19 @@ label {
 }
 
 .fa {
-  color: $color4;
+  color: $color1;
   transition: all 0.4s linear;
-  cursor: pointer;
+  margin-right: 5px;
   &:hover {
-    color: $color3;
+    color: $color4;
+  }
+  
+  &.fa-baby-bottle {
+    margin-right: 0;
   }
 
-  &.fa-frown-o {
-    color: $color1
+  &.fa-trash-o {
+    cursor: pointer;
   }
 
   &.fa-arrow-left {
