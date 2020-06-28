@@ -10,7 +10,7 @@ class FeedsList extends Component {
     // }
 
     render() {
-        //let feeds = Object.keys(this.props.feeds);
+        let feeds = Object.keys(this.props.feeds);
         // let getMilkTotal = feeds.map((item,idx) => {
         //     return this.props.feeds[item].reduce((a,cv) => {
         //         return a + cv.milk
@@ -22,11 +22,20 @@ class FeedsList extends Component {
                 return a + cv.milk
             }, 0)
         });
-        
+
+        let totalWet = feeds.map((item, idx) => {
+            return this.props.feeds[item].reduce((a, cv) => {
+                return a + cv.nappies.wet
+            }, 0)
+        });
+
+        let totalDirty = feeds.map((item,idx) => {
+            return this.props.feeds[item].reduce((a,cv) => {
+                return a + cv.nappies.dirty
+            },0)
+        });
 
         let groupDates;
-
-        
 
         if(this.props.feeds.length === 0){
             groupDates = <h1>There are currently no feeds</h1>
@@ -47,7 +56,7 @@ class FeedsList extends Component {
             // })
 
             groupDates = this.props.test.map((item,idx) => {
-                return <FeedDateItem key={idx} date={item[1][0].date} total={getMilkTotal[idx]}>
+                return <FeedDateItem key={idx} date={item[1][0].date} total={getMilkTotal[idx]} totalWet={totalWet[idx]} totalDirty={totalDirty[idx]}>
                     {item[1].map((x,idx) => {
 
                     let foodEatenAtTime;
@@ -57,7 +66,7 @@ class FeedsList extends Component {
                         })
                     }
 
-                    return <FeedDetail food={x.food ? foodEatenAtTime : null} key={x.time + x.milk + getMilkTotal[idx]} milk={x.milk} time={x.time} notes={x.notes} />
+                        return <FeedDetail food={x.food ? foodEatenAtTime : null} key={x.time + x.milk + getMilkTotal[idx]} milk={x.milk} time={x.time} notes={x.notes} dirty={x.nappies.dirty} wet={x.nappies.wet}/>
                 })}
                 </FeedDateItem>
             })

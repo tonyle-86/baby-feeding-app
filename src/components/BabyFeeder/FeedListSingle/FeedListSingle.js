@@ -41,7 +41,7 @@ class FeedListSingle extends Component {
             return i === selectedDate;
         }).map((x) => {
             return this.props.feeds[x].map((item, idx) => {
-                return <FeedDetail time={item.time} key={idx} milk={item.milk} notes={item.notes}/>
+                return <FeedDetail time={item.time} key={idx} milk={item.milk} notes={item.notes} dirty={item.nappies.dirty} wet={item.nappies.wet}/>
             })
         })
 
@@ -54,12 +54,33 @@ class FeedListSingle extends Component {
             },0)
         })
 
+        let totalWet = feeds.filter(i => {
+            selectedDate = this.getDate();
+            return i === selectedDate;
+        }).map((item, idx) => {
+            return this.props.feeds[item].reduce((a, cv) => {
+                return a + cv.nappies.wet
+            }, 0)
+        });
+
+        let totalDirty = feeds.filter(i => {
+            selectedDate = this.getDate();
+            return i === selectedDate;
+        }).map((item, idx) => {
+            return this.props.feeds[item].reduce((a, cv) => {
+                return a + cv.nappies.dirty
+            }, 0)
+        });
+
+
+        console.log(totalWet)
+
         if(filterByDate.length === 0){
             filterByDate = <h3>There are no feeds recorded for this day <span><i className="fa fa-frown-o" aria-hidden="true"></i></span></h3>
         };
 
         if (milkTotal.length) {
-            milkTotal = <FeedTotal feedTotal={milkTotal} />
+            milkTotal = <FeedTotal feedTotal={milkTotal} totalWet={totalWet} totalDirty={totalDirty}/>
         }
 
         return(

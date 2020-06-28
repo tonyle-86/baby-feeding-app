@@ -13,6 +13,9 @@ const navigationItem = () => {
                 <NavLink to="/add-feed">Add Feed</NavLink>
             </li>
             <li className="NavigationItem">
+                <NavLink to="/add-nappy">Add Nappy</NavLink>
+            </li>
+            <li className="NavigationItem">
                 <NavLink to="/calendar">Calendar</NavLink>
             </li>
             <li className="NavigationItem">

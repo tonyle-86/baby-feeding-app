@@ -4,6 +4,7 @@ import Aux from '../../../hoc/Aux/Aux';
 import axios from 'axios';
 import Summary from '../Summary/Summary';
 import Form from '../Form/Form';
+import NappyForm from '../NappyForm/NappyForm';
 import Calendar from 'react-calendar';
 import '../../UI/Datepicker/Datepicker.scss';
 import '../../UI/Calendar/Calendar.scss';
@@ -29,7 +30,11 @@ class FeedForm extends Component {
         nextDate: new Date(),
         prevDate: new Date(),
         test: [],
-        noOfResultsToShow: 2
+        noOfResultsToShow: 2,
+        nappies: {
+            wet: 0,
+            dirty: 0
+        }
     };
 
     handleDateChange = (date) => {
@@ -105,16 +110,19 @@ class FeedForm extends Component {
             })
     }
 
-
-
     postDataHandler = () => {
         const payload = {
             date: this.state.date.toDateString(),
             time: this.state.time.toString(),
             milk: parseInt(this.state.milk),
             food: [...this.state.food],
+            nappies: this.state.nappies,
             foodOption: this.state.foodOption,
-            notes: this.state.notes
+            notes: this.state.notes,
+            nappies: {
+                wet: this.state.nappies.wet,
+                dirty: this.state.nappies.dirty
+            }
         };
 
         axios.post('https://baby-feeder-uat-185a3.firebaseio.com/feeds.json', payload)
@@ -125,6 +133,10 @@ class FeedForm extends Component {
                 milk: 0,
                 notes: '',  
                 food: [],
+                nappies: {
+                    wet: 0,
+                    dirty: 0
+                },
                 hasSubmitted: true,
                 isLoading: true
             });
@@ -141,7 +153,6 @@ class FeedForm extends Component {
             if (response.data) {
                 const feedsObj = Object.keys(response.data);
                 let feedsByDate = feedsObj.map(i => {
-
                     return response.data[i];
                 })
                 .sort((x, y) => {
@@ -183,9 +194,59 @@ class FeedForm extends Component {
         })
     }
 
+
+
+    fetchFeedsData = () => {
+        axios.get('https://baby-feeder-uat-185a3.firebaseio.com/feeds.json')
+        .then(response => {
+            if (response.data) {
+                const feedsObj = Object.keys(response.data);
+                let feedsByDate = feedsObj.map(i => {
+                    return response.data[i];
+                })
+                .sort((x, y) => {
+                    return new Date(y.time) - new Date(x.time);
+                })
+                .sort((a, b) => {
+                    return new Date(b.date) - new Date(a.date);
+                })
+
+                const sortByDateArr = [...feedsByDate];
+
+                const groupBy = (array, key) => {
+                    return array.reduce((result, currentValue) => {
+
+                        (result[currentValue[key]] = result[currentValue[key]] || []).push(
+                            currentValue
+                        );
+                        return result;
+                    }, {});
+                };
+
+                const feedsGroupedByDate = groupBy(sortByDateArr, 'date');
+
+                let feedsLength = Object.entries(feedsGroupedByDate).length;
+
+                let test = Object.entries(feedsGroupedByDate).slice(0, this.state.noOfResultsToShow);
+
+                this.setState({
+                    feeds: feedsGroupedByDate,
+                    isLoading: false,
+                    hasSubmitted: false,
+                    feedsLength: feedsLength,
+                    test: test
+                });
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    }
+
+
     getLatestFeeds = () => {
         if (this.state.isLoading) {
-            this.fetchFeedsData()
+            this.fetchFeedsData();
         }
     }
 
@@ -218,11 +279,24 @@ class FeedForm extends Component {
         })
     }
 
-    addAdditionalFoodHandler = () => {
+    addAdditionalFoodHandler = (foodItem) => {
+        
+        if(foodItem.length){
+            console.log(foodItem)
+            this.postFoodOptionHandler();
+        }
         this.setState(prevState => ({
             food: [...prevState.food, { name: this.state.foodOptionsArr[0], quantity: 1 }]
         }));
     }
+
+//     hello = () => {
+// this.setState({
+// //     tony: true
+// // })
+//             console.log('TONY 123');
+
+//     }
 
     removeFoodHandler = (idx) => {
         let newFood = [...this.state.food];
@@ -289,6 +363,22 @@ class FeedForm extends Component {
         console.log('REMOVED');
     }
 
+    nappyHandler = (event) => {
+        if (event.target.value === 'dirty'){
+            this.setState({
+                nappies: {dirty: 1, wet: 0}
+            })
+        } else if (event.target.value === 'wet'){
+            this.setState({
+                nappies: { dirty: 0, wet: 1 }
+            })
+        } else {
+            this.setState({
+                nappies: { dirty: 0, wet: 0}
+            })
+        }
+    }
+
     render() {
         let redirectToFeed, loadMore =  null;
 
@@ -316,6 +406,18 @@ class FeedForm extends Component {
                         removeFoodHandler={this.removeFoodHandler.bind(this)}
                         foodChangeHandler={this.foodChangeHandler.bind(this)}
                         foodQuantityHandler={this.foodChangeHandler.bind(this)} 
+                        notesHandler={this.notesHandler.bind(this)}
+                        postDataHandler={this.postDataHandler.bind(this)}
+                        addFoodOptionHandler={this.addFoodOptionHandler.bind(this)}
+                        postFoodOptionHandler={this.postFoodOptionHandler.bind(this)}
+                    />
+                </Route>
+                <Route path='/add-nappy' exact>
+                    <NappyForm {...this.state}
+                        label='Add Nappy'
+                        handleDateChange={this.handleDateChange.bind(this)}
+                        handleTimeChange={this.handleTimeChange.bind(this)}
+                        nappyHandler={this.nappyHandler.bind(this)}
                         notesHandler={this.notesHandler.bind(this)}
                         postDataHandler={this.postDataHandler.bind(this)}
                     />

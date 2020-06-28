@@ -9,12 +9,14 @@ import Input from '../../UI/Input/Input';
 import './Form.scss';
 import '../../UI/Datepicker/Datepicker.scss';
 import { Link } from 'react-router-dom';
+import { Route } from 'react-router-dom'
 registerLocale('en-gb', enGb);
 
 class Form extends Component {
 
     render(){
-        
+        let addFoodOption;
+
         const addFoodSection = this.props.food.map((item, idx) => {
             return <div key={idx} className='coloumn-container'>
 
@@ -30,8 +32,13 @@ class Form extends Component {
                                 quantity: this.props.food[idx].quantity
                             };
                             this.props.foodChangeHandler();
+                            if(event.target.value === 'Other') {
+                                this.props.hello()
+                              
+                            } 
                         }}
                     />
+                    
                 </div>
                 
                 <div className='half-coloumn half-coloumn--alt'>
@@ -64,15 +71,27 @@ class Form extends Component {
 
         let foodLabels;
 
-        
-
         if (this.props.food.length >= 1) {
             foodLabels = <div className='coloumn-container'>
                 <div className='half-coloumn half-coloumn--alt'><label>Food:</label></div>
                 <div className='half-coloumn half-coloumn--alt'><label>Quantity:</label></div>
-                <div className='trash'></div>
-                
+                <div className='trash'></div>     
             </div>
+        }
+
+        if (this.props.food.length >= 1) {
+            addFoodOption = <Aux>
+                <div className='coloumn-container'>
+                    <div className='half-coloumn half-coloumn--alt'>
+                        <Input change={this.props.addFoodOptionHandler} placeholder='Add your own food items' value={this.props.foodOption} />
+                    </div>  
+                    <div className='half-coloumn half-coloumn--alt'>
+                        {this.props.foodOption.length ? <Button label='Add food item' clicked={this.props.postFoodOptionHandler} /> : null}
+                    </div>  
+                    <div className='trash'></div>
+                </div>
+        </Aux>
+        
         }
 
         const disabledSubmit = (this.props.milk === 0 || this.props.milk === '0') && this.props.food.length === 0 && this.props.notes === '' ? 'hide': null;
@@ -91,13 +110,18 @@ class Form extends Component {
                     <label>Time:</label>
                 <Input type='time' change={this.props.handleTimeChange} defaultValue={this.props.time.toTimeString().slice(0, 5)}/>
                     </div></div>
+
+
                 <Dropdown type='milk' label='Milk' value={this.props.milk} 
                 changeHandler={this.props.milkChangeHandler.bind(this)} />
 
                 {foodLabels}
+         
                 {addFoodSection}
 
-                <Button styleName='add width-100' label={this.props.food.length === 0 ? 'Add Food' : 'Add Additional Food'} clicked={this.props.addAdditionalFoodHandler} />
+                {addFoodOption}
+
+                <Button styleName='add width-100' label={this.props.food.length === 0 ? 'Add Food' : 'Add Additional Food'} clicked={() => this.props.addAdditionalFoodHandler(this.props.foodOption)} />
 
                 <Textarea label='Notes' changeHandler={this.props.notesHandler.bind(this)}/>
 

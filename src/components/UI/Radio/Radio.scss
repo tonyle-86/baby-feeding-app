@@ -1,0 +1,8 @@
+@import '../../../variables.scss';
+@import '../../../mixins.scss';
+
+
+.Input {
+    @include formStyling;
+    -webkit-appearance: none;
+}

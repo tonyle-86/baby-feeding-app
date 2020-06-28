@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import Input from '../UI/Input/Input';
-import Button from '../UI/Button/Button';
 import Aux from '../../hoc/Aux/Aux';
 import './Config.scss';
 
@@ -19,9 +17,6 @@ class Config extends Component {
                 <ul className='food-items'>
                     {foodOptionsList}
                 </ul>
-                <Input change={this.props.addFoodOptionHandler} placeholder='Add your own food items' value={this.props.foodOption}/>
-                <Button label='Add food item' clicked={this.props.postFoodOptionHandler}/>
-                
             </Aux>
         )
     }
