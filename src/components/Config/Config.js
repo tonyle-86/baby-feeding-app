@@ -6,8 +6,8 @@ class Config extends Component {
     render(){
 
         const foodOptionsList = this.props.foodOptionsArr.map((item,idx) => {
-            return <li className='food-item' key={idx}>{item} <i className="fa fa-trash fr" aria-hidden="true" 
-            onClick={this.props.removeFoodOptionHandler}></i></li>
+            return <li className='food-item' key={idx}>{item.food} <i className="fa fa-trash fr" aria-hidden="true" 
+            onClick={() => this.props.removeFoodOptionHandler(item.fbKey)}></i></li>
         })
 
         return (

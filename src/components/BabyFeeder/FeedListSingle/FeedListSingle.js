@@ -72,11 +72,8 @@ class FeedListSingle extends Component {
             }, 0)
         });
 
-
-        console.log(totalWet)
-
         if(filterByDate.length === 0){
-            filterByDate = <h3>There are no feeds recorded for this day <span><i className="fa fa-frown-o" aria-hidden="true"></i></span></h3>
+            filterByDate = <h3>There are no feeds recorded for this day <span><i className="fa fa-crying-face" aria-hidden="true"></i></span></h3>
         };
 
         if (milkTotal.length) {

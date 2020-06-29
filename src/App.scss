@@ -9,6 +9,10 @@
 label {
   display: block;
   font-weight: bold;
+
+  span{
+    font-weight: normal;
+  }
 }
 
 .coloumn-container {
@@ -30,6 +34,11 @@ label {
   &--alt {
     width: 45%
   }
+}
+
+.third-coloumn {
+  width: 33%;
+  display: inline-block;
 }
 
 .trash {
@@ -101,5 +110,10 @@ label {
 
   &.fa-1-5x{
     font-size: 1.5em;
+  }
+
+  &.fa-chevron-right,
+  &.fa-chevron-left  {
+    color: $color2;
   }
 }

@@ -26,9 +26,9 @@ class FeedDetail extends Component {
                             <strong>Food</strong><br /> {this.props.food ? this.props.food : 'None'}
                         </div>
                     </div>
-                    <div className="half-coloumn">
+                    <div className="full-coloumn">
                         <div>
-                            <strong>Nappy</strong><br /> {this.props.dirty ? <i className="fa fa-nappy-dirty fa-1-5x" aria-hidden="true"></i> : this.props.wet ? <i className="fa fa-nappy-wet fa-1-5x" aria-hidden="true"></i>   : 'None'}
+                            <strong>Nappy</strong><br /> {this.props.dirty ? 'Dirty' : this.props.wet ?  'Wet' : 'None'}
                         </div>
                     </div>
                     <div className="full-coloumn">{this.props.notes ? <div><strong>Notes</strong><br /> {this.props.notes}</div> : null}</div>

@@ -32,7 +32,7 @@ class Dropdown extends Component {
 
         const optionsItems = optionsArr.map((i) => {
             return (
-                <DropdownOption type={this.props.type} key={i} label={i} />
+                <DropdownOption type={this.props.type} key={i.food} label={i.food ? i.food : i} />
             )
         })
 

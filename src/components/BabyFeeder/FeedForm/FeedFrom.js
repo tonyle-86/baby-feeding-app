@@ -4,7 +4,7 @@ import Aux from '../../../hoc/Aux/Aux';
 import axios from 'axios';
 import Summary from '../Summary/Summary';
 import Form from '../Form/Form';
-import NappyForm from '../NappyForm/NappyForm';
+// import NappyForm from '../NappyForm/NappyForm';
 import Calendar from 'react-calendar';
 import '../../UI/Datepicker/Datepicker.scss';
 import '../../UI/Calendar/Calendar.scss';
@@ -86,18 +86,26 @@ class FeedForm extends Component {
             .then(response => {
                 if (response.data) {
                     const foodObj = Object.keys(response.data);
-                    let foodOptionsArr = foodObj.map(i => {
-                        return response.data[i].foodOption;
-                    }).sort((a, b) => {
-                        if (a < b) {
-                            return -1;
-                        }
+                    let foodOptionsArr = foodObj.map((i,idx) => {
+                        //return response.data[i].foodOption
+                        return { fbKey: foodObj[idx], food: response.data[i].foodOption }
+                    })
 
-                        if (a > b) {
-                            return 1;
-                        }
-                        return 0;
-                    });
+
+                    
+                    // .sort((a, b) => {
+                    //     if (a < b) {
+                    //         return -1;
+                    //     }
+
+                    //     if (a > b) {
+                    //         return 1;
+                    //     }
+                    //     return 0;
+                    // });
+
+
+                    //console.log(foodOptionsArr)
                     
                     
                     this.setState({
@@ -116,7 +124,6 @@ class FeedForm extends Component {
             time: this.state.time.toString(),
             milk: parseInt(this.state.milk),
             food: [...this.state.food],
-            nappies: this.state.nappies,
             foodOption: this.state.foodOption,
             notes: this.state.notes,
             nappies: {
@@ -282,11 +289,10 @@ class FeedForm extends Component {
     addAdditionalFoodHandler = (foodItem) => {
         
         if(foodItem.length){
-            console.log(foodItem)
             this.postFoodOptionHandler();
         }
         this.setState(prevState => ({
-            food: [...prevState.food, { name: this.state.foodOptionsArr[0], quantity: 1 }]
+            food: [...prevState.food, { name: this.state.foodOptionsArr[0].food, quantity: 1 }]
         }));
     }
 
@@ -359,8 +365,8 @@ class FeedForm extends Component {
         })
     }
 
-    removeFoodOptionHandler = () => {
-        console.log('REMOVED');
+    removeFoodOptionHandler = (event) => {
+        console.log(event);
     }
 
     nappyHandler = (event) => {
@@ -405,14 +411,15 @@ class FeedForm extends Component {
                         addAdditionalFoodHandler={this.addAdditionalFoodHandler.bind(this)}
                         removeFoodHandler={this.removeFoodHandler.bind(this)}
                         foodChangeHandler={this.foodChangeHandler.bind(this)}
-                        foodQuantityHandler={this.foodChangeHandler.bind(this)} 
+                        foodQuantityHandler={this.foodChangeHandler.bind(this)}
+                        nappyHandler={this.nappyHandler.bind(this)} 
                         notesHandler={this.notesHandler.bind(this)}
                         postDataHandler={this.postDataHandler.bind(this)}
                         addFoodOptionHandler={this.addFoodOptionHandler.bind(this)}
                         postFoodOptionHandler={this.postFoodOptionHandler.bind(this)}
                     />
                 </Route>
-                <Route path='/add-nappy' exact>
+                {/* <Route path='/add-nappy' exact>
                     <NappyForm {...this.state}
                         label='Add Nappy'
                         handleDateChange={this.handleDateChange.bind(this)}
@@ -421,7 +428,7 @@ class FeedForm extends Component {
                         notesHandler={this.notesHandler.bind(this)}
                         postDataHandler={this.postDataHandler.bind(this)}
                     />
-                </Route>
+                </Route> */}
                 <Route path='/calendar'>
                     <h2>Calendar <i className="fa fa-calendar" aria-hidden="true"></i></h2>
                     <Calendar onChange={this.handleCalendarDateChange} value={this.state.calendarDate}/>

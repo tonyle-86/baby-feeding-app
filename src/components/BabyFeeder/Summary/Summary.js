@@ -9,31 +9,30 @@ class FeedsList extends Component {
     //     this.props.componentDidMount();
     // }
 
+    dailyTotalOf = (type) => {
+       return this.props.test.map((item, idx) => {
+            return item[1].reduce((a, cv) => {
+                if(type === 'milk'){
+                    return a + cv.milk
+                } else if (type === 'wet') {
+                    return a + cv.nappies.wet
+                } else if (type === 'dirty') {
+                    return a + cv.nappies.dirty
+                } 
+                
+                return null
+
+            }, 0)
+        });
+    }
+
     render() {
-        let feeds = Object.keys(this.props.feeds);
+        //let feeds = Object.keys(this.props.feeds);
         // let getMilkTotal = feeds.map((item,idx) => {
         //     return this.props.feeds[item].reduce((a,cv) => {
         //         return a + cv.milk
         //     },0)
         // });
-
-        let getMilkTotal = this.props.test.map((item, idx) => {
-            return item[1].reduce((a, cv) => {
-                return a + cv.milk
-            }, 0)
-        });
-
-        let totalWet = feeds.map((item, idx) => {
-            return this.props.feeds[item].reduce((a, cv) => {
-                return a + cv.nappies.wet
-            }, 0)
-        });
-
-        let totalDirty = feeds.map((item,idx) => {
-            return this.props.feeds[item].reduce((a,cv) => {
-                return a + cv.nappies.dirty
-            },0)
-        });
 
         let groupDates;
 
@@ -56,7 +55,7 @@ class FeedsList extends Component {
             // })
 
             groupDates = this.props.test.map((item,idx) => {
-                return <FeedDateItem key={idx} date={item[1][0].date} total={getMilkTotal[idx]} totalWet={totalWet[idx]} totalDirty={totalDirty[idx]}>
+                return <FeedDateItem key={idx} date={item[1][0].date} total={this.dailyTotalOf('milk')[idx]} totalWet={this.dailyTotalOf('wet')[idx]} totalDirty={this.dailyTotalOf('dirty')[idx]}>
                     {item[1].map((x,idx) => {
 
                     let foodEatenAtTime;
@@ -66,7 +65,7 @@ class FeedsList extends Component {
                         })
                     }
 
-                        return <FeedDetail food={x.food ? foodEatenAtTime : null} key={x.time + x.milk + getMilkTotal[idx]} milk={x.milk} time={x.time} notes={x.notes} dirty={x.nappies.dirty} wet={x.nappies.wet}/>
+                        return <FeedDetail food={x.food ? foodEatenAtTime : null} key={x.time + x.milk + this.dailyTotalOf('milk')[idx]} milk={x.milk} time={x.time} notes={x.notes} dirty={x.nappies.dirty} wet={x.nappies.wet}/>
                 })}
                 </FeedDateItem>
             })

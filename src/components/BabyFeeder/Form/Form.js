@@ -6,10 +6,10 @@ import Button from '../..//UI/Button/Button';
 import enGb from 'date-fns/locale/en-GB';
 import Datepicker, { registerLocale } from 'react-datepicker';
 import Input from '../../UI/Input/Input';
+import Radio from '../../UI/Radio/Radio';
 import './Form.scss';
 import '../../UI/Datepicker/Datepicker.scss';
 import { Link } from 'react-router-dom';
-import { Route } from 'react-router-dom'
 registerLocale('en-gb', enGb);
 
 class Form extends Component {
@@ -32,10 +32,6 @@ class Form extends Component {
                                 quantity: this.props.food[idx].quantity
                             };
                             this.props.foodChangeHandler();
-                            if(event.target.value === 'Other') {
-                                this.props.hello()
-                              
-                            } 
                         }}
                     />
                     
@@ -90,11 +86,11 @@ class Form extends Component {
                     </div>  
                     <div className='trash'></div>
                 </div>
-        </Aux>
+            </Aux>
         
         }
 
-        const disabledSubmit = (this.props.milk === 0 || this.props.milk === '0') && this.props.food.length === 0 && this.props.notes === '' ? 'hide': null;
+        const disabledSubmit = (this.props.milk === 0 || this.props.milk === '0') && this.props.nappies.wet === 0 && this.props.nappies.dirty === 0 && this.props.food.length === 0 && this.props.notes === '' ? 'hide': null;
 
         return(
 
@@ -123,7 +119,30 @@ class Form extends Component {
 
                 <Button styleName='add width-100' label={this.props.food.length === 0 ? 'Add Food' : 'Add Additional Food'} clicked={() => this.props.addAdditionalFoodHandler(this.props.foodOption)} />
 
-                <Textarea label='Notes' changeHandler={this.props.notesHandler.bind(this)}/>
+                <div className='nappy-type radio-container coloumn-container'>
+                    <div className='full-coloumn'>
+                        <label>Nappy:</label>
+                    </div>
+                    <div className='third-coloumn'>
+                        <Radio type='radio' change={this.props.nappyHandler}
+                            label={<Aux><i className="fa fa-ban fa-1-5x" aria-hidden="true"></i><span>None</span></Aux>} name='nappy' id='none' />
+                    </div>
+                    <div className='third-coloumn'>
+                        <Radio type='radio' change={this.props.nappyHandler} 
+                            label={<Aux><i className="fa fa-nappy-wet fa-1-5x" aria-hidden="true"></i><span>Wet</span></Aux>} 
+                        name='nappy' id='wet' />
+                    </div>
+                    <div className='third-coloumn'>
+                        <Radio type='radio' change={this.props.nappyHandler} 
+                            label={<Aux><i className="fa fa-nappy-dirty fa-1-5x" aria-hidden="true"></i><span>Dirty</span></Aux>} name='nappy' id='dirty' />
+                    </div>
+                    
+                </div>
+
+                <div>
+                    <Textarea label='Notes' changeHandler={this.props.notesHandler.bind(this)}/>
+                </div>
+                
 
                 <div className='coloumn-container'>
                     <div className='half-coloumn'>

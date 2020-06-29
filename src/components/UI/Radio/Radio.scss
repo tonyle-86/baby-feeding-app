@@ -6,3 +6,29 @@
     @include formStyling;
     -webkit-appearance: none;
 }
+
+.radio-container {
+    margin-bottom: 30px;
+    label {
+        display: inline-block
+    }
+}
+
+input[type=radio] + label {
+    display:inline-block;
+    margin:-2px;
+    padding: 4px 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+input[type=radio]:checked + label { 
+   background-image: none;
+   color: $color1;
+
+   &:after {
+    font: normal normal normal 14px/1 FontAwesome;
+    margin-left: 10px;
+    content: "\f00c"
+   }
+}
