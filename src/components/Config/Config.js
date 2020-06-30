@@ -5,10 +5,14 @@ import './Config.scss';
 class Config extends Component {
     render(){
 
-        const foodOptionsList = this.props.foodOptionsArr.map((item,idx) => {
+        let foodOptionsList = this.props.foodOptionsArr.map((item,idx) => {
             return <li className='food-item' key={idx}>{item.food} <i className="fa fa-trash fr" aria-hidden="true" 
-            onClick={() => this.props.removeFoodOptionHandler(item.fbKey)}></i></li>
+            onClick={() => this.props.removeFoodOptionHandler(item.fbKey, idx)}></i></li>
         })
+
+        // if (foodOptionsList.length === 0) {
+        //     foodOptionsList = 
+        // }
 
         return (
             <Aux>

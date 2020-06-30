@@ -17,7 +17,11 @@ class Dropdown extends Component {
         } else {
             optionsArr = ['Chao', 'Carrots', 'Chicken', 'Spinach', 'Butternut Squash', 'Brocolli', 'Courgettes', 'Potato', 'Sweet Potato', 'Banana', 'Pear', 'Yogurt'];
 
-            optionsArr = [...optionsArr, ...this.props.foodOptionsArr].sort((a, b) => {
+            const foodOptionsArr = this.props.foodOptionsArr.map(i => {
+                return i.food
+            })
+
+            optionsArr = [...optionsArr, ...foodOptionsArr].sort((a, b) => {
                 if (a < b) {
                     return -1;
                 }
@@ -27,12 +31,14 @@ class Dropdown extends Component {
                 }
                 return 0;
             })
-
+console.log(optionsArr)
         }
+
+        
 
         const optionsItems = optionsArr.map((i) => {
             return (
-                <DropdownOption type={this.props.type} key={i.food} label={i.food ? i.food : i} />
+                <DropdownOption type={this.props.type} key={`${i} ${i.food}`} label={i.food ? i.food : i} />
             )
         })
 

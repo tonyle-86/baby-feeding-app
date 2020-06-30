@@ -11,6 +11,7 @@ import '../../UI/Calendar/Calendar.scss';
 import Button from '../../UI/Button/Button';
 import FeedListSingle from '../FeedListSingle/FeedListSingle';
 import Config from '../../Config/Config';
+import firebase from '../../../firebase';
 
 class FeedForm extends Component {
 
@@ -286,13 +287,12 @@ class FeedForm extends Component {
         })
     }
 
-    addAdditionalFoodHandler = (foodItem) => {
-        
+    addAdditionalFoodHandler = (foodItem) => {        
         if(foodItem.length){
             this.postFoodOptionHandler();
         }
         this.setState(prevState => ({
-            food: [...prevState.food, { name: this.state.foodOptionsArr[0].food, quantity: 1 }]
+            food: [...prevState.food, { name: this.state.foodOptionsArr.length > 0 ? this.state.foodOptionsArr[0].food : 'Chao', quantity: 1 }]
         }));
     }
 
@@ -365,8 +365,18 @@ class FeedForm extends Component {
         })
     }
 
-    removeFoodOptionHandler = (event) => {
-        console.log(event);
+    removeFoodOptionHandler = (foodItem, idx) => {
+        const removeFoodItem = firebase.database().ref(`/foodItems/${foodItem}`).remove();
+
+        removeFoodItem
+        .then(() =>{
+            this.setState({
+                foodOptionsArr: this.state.foodOptionsArr.filter((_, i) => i !== idx)
+            })
+        })
+        .catch((error) => {
+            console.log(error);
+        })
     }
 
     nappyHandler = (event) => {
