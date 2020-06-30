@@ -70,6 +70,8 @@ class FeedForm extends Component {
             foodOption: this.state.foodOption
         };
 
+        this.addFoodOptionHandler();
+
         axios.post('https://baby-feeder-uat-185a3.firebaseio.com/foodItems.json', payload)
             .then(response => {
                 this.fetchFoodOptionsHandler();
@@ -359,11 +361,17 @@ class FeedForm extends Component {
         })
     )}
 
-    addFoodOptionHandler = (event) => {
+    foodOptionHandler = (event) => {
         this.setState({
             foodOption: event.target.value
         })
     }
+
+    addFoodOptionHandler = () => {
+        this.setState(prevState => ({
+            food: [...prevState.food, { name: this.state.foodOption, quantity: 1 }]
+        }));
+    } 
 
     removeFoodOptionHandler = (foodItem, idx) => {
         const removeFoodItem = firebase.database().ref(`/foodItems/${foodItem}`).remove();
@@ -425,7 +433,7 @@ class FeedForm extends Component {
                         nappyHandler={this.nappyHandler.bind(this)} 
                         notesHandler={this.notesHandler.bind(this)}
                         postDataHandler={this.postDataHandler.bind(this)}
-                        addFoodOptionHandler={this.addFoodOptionHandler.bind(this)}
+                        foodOptionHandler={this.foodOptionHandler.bind(this)}
                         postFoodOptionHandler={this.postFoodOptionHandler.bind(this)}
                     />
                 </Route>
@@ -454,8 +462,6 @@ class FeedForm extends Component {
                 </Route>
                 <Route path='/config'>
                     <Config label='Config' {...this.state} 
-                        addFoodOptionHandler={this.addFoodOptionHandler.bind(this)}
-                        postFoodOptionHandler={this.postFoodOptionHandler.bind(this)}
                         removeFoodOptionHandler={this.removeFoodOptionHandler.bind(this)}
                         />
                 </Route>

@@ -79,10 +79,10 @@ class Form extends Component {
             addFoodOption = <Aux>
                 <div className='coloumn-container'>
                     <div className='half-coloumn half-coloumn--alt'>
-                        <Input change={this.props.addFoodOptionHandler} placeholder='Add your own food items' value={this.props.foodOption} />
+                        <Input change={this.props.foodOptionHandler} placeholder='Add your own food items' value={this.props.foodOption} />
                     </div>  
                     <div className='half-coloumn half-coloumn--alt'>
-                        {this.props.foodOption.length ? <Button label='Add food item' clicked={this.props.postFoodOptionHandler} /> : null}
+                        {this.props.foodOption.length ? <Button styleName='width-100' label='Add food item' clicked={this.props.postFoodOptionHandler} /> : null}
                     </div>  
                     <div className='trash'></div>
                 </div>
@@ -98,13 +98,12 @@ class Form extends Component {
                 <h2>{this.props.label} <i className="fa fa-cutlery" aria-hidden="true"></i></h2>
                 <div className='coloumn-container'>
                     <div className='half-coloumn'>
-                <label>Date:</label>
-                <Datepicker locale='en-gb' selected={this.props.date} onChange={this.props.handleDateChange} dateFormat='dd/MM/yyyy' />
-                
+                        <label>Date:</label>
+                        <Datepicker locale='en-gb' selected={this.props.date} onChange={this.props.handleDateChange} dateFormat='dd/MM/yyyy' />
                     </div>
                     <div className='half-coloumn'>
                     <label>Time:</label>
-                <Input type='time' change={this.props.handleTimeChange} defaultValue={this.props.time.toTimeString().slice(0, 5)}/>
+                    <Input type='time' change={this.props.handleTimeChange} defaultValue={this.props.time.toTimeString().slice(0, 5)}/>
                     </div></div>
 
 
