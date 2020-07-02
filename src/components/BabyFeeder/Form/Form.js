@@ -25,6 +25,7 @@ class Form extends Component {
                         foodOptionsArr={this.props.foodOptionsArr}
                         className='dropdown-food'
                         value={this.props.food[idx].name}
+                        test={() => this.props.test}
                         changeHandler={event => {
                             const { food } = this.props;
                             food[idx] = {

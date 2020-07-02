@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import FeedForm from './FeedForm/FeedFrom';
+import FeedForm from './FeedForm/FeedForm';
 import './BabyFeeder.scss';
 
 class BabyFeeder extends Component {

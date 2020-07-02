@@ -1,16 +1,31 @@
 import React, { Component } from 'react';
 import './FeedDetail.scss';
+import { Route } from 'react-router-dom';
 
 class FeedDetail extends Component {
 
     state = {
-        feeds: this.props.feedState
+        removeToggle: this.props.removeToggle
     }
 
     render() {
+
+        const deleteButton = this.props.removeToggle ? <i className="fa fa-trash fa-1-5x" aria-hidden="true" onClick={() => this.props.click(this.props.fbKey, this.props.idx)}></i> : null;
+
+        const editButton = this.props.removeToggle ? <i className="fa fa-pencil fa-1-5x" aria-hidden="true"></i> : null;
+
         return (
            
             <div className="feed-item"> 
+                <Route path='/by-day'>
+                    
+                    <div className='modify-buttons'>
+                        {deleteButton}
+                        {editButton}
+                    </div>
+
+
+                </Route>
                 <div className="feed-time-container">
                     <div className="feed-time">{new Date(this.props.time).toLocaleTimeString().slice(0,5)}</div>
                 </div>

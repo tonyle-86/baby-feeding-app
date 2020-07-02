@@ -65,12 +65,13 @@ class FeedForm extends Component {
         });
     })
 
-    postFoodOptionHandler = () => {
+    postFoodOptionHandler = (page) => {
         const payload = {
             foodOption: this.state.foodOption
         };
-
-        this.addFoodOptionHandler();
+        if(page !== 'config'){
+            this.addFoodOptionHandler();
+        }
 
         axios.post('https://baby-feeder-uat-185a3.firebaseio.com/foodItems.json', payload)
             .then(response => {
@@ -90,27 +91,18 @@ class FeedForm extends Component {
                 if (response.data) {
                     const foodObj = Object.keys(response.data);
                     let foodOptionsArr = foodObj.map((i,idx) => {
-                        //return response.data[i].foodOption
                         return { fbKey: foodObj[idx], food: response.data[i].foodOption }
                     })
+                    .sort((a, b) => {
+                        if (a.food < b.food) {
+                            return -1;
+                        }
 
-
-                    
-                    // .sort((a, b) => {
-                    //     if (a < b) {
-                    //         return -1;
-                    //     }
-
-                    //     if (a > b) {
-                    //         return 1;
-                    //     }
-                    //     return 0;
-                    // });
-
-
-                    //console.log(foodOptionsArr)
-                    
-                    
+                        if (a.food > b.food) {
+                            return 1;
+                        }
+                        return 0;
+                    });
                     this.setState({
                         foodOptionsArr: foodOptionsArr
                     });
@@ -162,8 +154,10 @@ class FeedForm extends Component {
         .then(response => {
             if (response.data) {
                 const feedsObj = Object.keys(response.data);
-                let feedsByDate = feedsObj.map(i => {
-                    return response.data[i];
+                let feedsByDate = feedsObj.map((i,idx) => {
+                    const keyObj = {fbKey : feedsObj[idx]};
+
+                    return {...response.data[i],...keyObj};
                 })
                 .sort((x, y) => {
                     return new Date(y.time) - new Date(x.time);
@@ -197,54 +191,9 @@ class FeedForm extends Component {
                     feedsLength: feedsLength,
                     test: test
                 });
-            }
-        })
-        .catch(error => {
-            console.log(error);
-        })
-    }
-
-
-
-    fetchFeedsData = () => {
-        axios.get('https://baby-feeder-uat-185a3.firebaseio.com/feeds.json')
-        .then(response => {
-            if (response.data) {
-                const feedsObj = Object.keys(response.data);
-                let feedsByDate = feedsObj.map(i => {
-                    return response.data[i];
-                })
-                .sort((x, y) => {
-                    return new Date(y.time) - new Date(x.time);
-                })
-                .sort((a, b) => {
-                    return new Date(b.date) - new Date(a.date);
-                })
-
-                const sortByDateArr = [...feedsByDate];
-
-                const groupBy = (array, key) => {
-                    return array.reduce((result, currentValue) => {
-
-                        (result[currentValue[key]] = result[currentValue[key]] || []).push(
-                            currentValue
-                        );
-                        return result;
-                    }, {});
-                };
-
-                const feedsGroupedByDate = groupBy(sortByDateArr, 'date');
-
-                let feedsLength = Object.entries(feedsGroupedByDate).length;
-
-                let test = Object.entries(feedsGroupedByDate).slice(0, this.state.noOfResultsToShow);
-
+            } else {
                 this.setState({
-                    feeds: feedsGroupedByDate,
-                    isLoading: false,
-                    hasSubmitted: false,
-                    feedsLength: feedsLength,
-                    test: test
+                    feeds: []
                 });
             }
         })
@@ -252,7 +201,6 @@ class FeedForm extends Component {
             console.log(error);
         })
     }
-
 
     getLatestFeeds = () => {
         if (this.state.isLoading) {
@@ -294,17 +242,9 @@ class FeedForm extends Component {
             this.postFoodOptionHandler();
         }
         this.setState(prevState => ({
-            food: [...prevState.food, { name: this.state.foodOptionsArr.length > 0 ? this.state.foodOptionsArr[0].food : 'Chao', quantity: 1 }]
+            food: [...prevState.food, { name: '', quantity: 1 }]
         }));
     }
-
-//     hello = () => {
-// this.setState({
-// //     tony: true
-// // })
-//             console.log('TONY 123');
-
-//     }
 
     removeFoodHandler = (idx) => {
         let newFood = [...this.state.food];
@@ -321,6 +261,55 @@ class FeedForm extends Component {
             food
         });
     }
+
+    foodOptionHandler = (event) => {
+        this.setState({
+            foodOption: event.target.value
+        })
+    }
+
+    addFoodOptionHandler = () => {
+        this.setState(prevState => ({
+            food: [...prevState.food, { name: this.state.foodOption, quantity: 1 }]
+        }));
+    }
+
+    removeFoodOptionHandler = (foodItem, idx) => {
+        let removeFoodItem = firebase.database().ref(`/foodItems/${foodItem}`).remove();
+
+        removeFoodItem
+        .then(() => {
+            this.setState({
+                foodOptionsArr: this.state.foodOptionsArr.filter((_, i) => i !== idx)
+            })
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+    }
+
+    getDate = () => {
+        let params = (new URL(document.location)).searchParams;
+        let date = params.get('date');
+
+        const formattedDate = `${date.slice(3, 5)}/${date.slice(0, 2)}/${date.slice(6, 10)}`
+        return new Date(formattedDate).toString().slice(0, 15);
+    }        
+    
+
+    removeFeedItemHandler = (feedItem, idx) => {
+        let removeFeedItem = firebase.database().ref(`/feeds/${feedItem}`).remove();
+        removeFeedItem
+            .then(() => {
+                this.fetchFeedsData();
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+
+
+    }
+
     
     milkChangeHandler = event => {
         this.setState({
@@ -344,6 +333,17 @@ class FeedForm extends Component {
         }
     )}
 
+    calendarSubmit = () => {
+        let myDate = new Date(this.state.calendarDate);
+
+        this.setState({
+            calendarDate: new Date(myDate.setDate(myDate.getDate())),
+            nextDate: new Date(myDate.setDate(myDate.getDate() + 1)),
+            prevDate: new Date(myDate.setDate(myDate.getDate() - 2))
+        }
+        )
+    }
+
     prevDateHandler = () => {
         let myDate = new Date(this.state.calendarDate);
 
@@ -360,32 +360,6 @@ class FeedForm extends Component {
             noOfResultsToShow: prevState.noOfResultsToShow + 3, 
         })
     )}
-
-    foodOptionHandler = (event) => {
-        this.setState({
-            foodOption: event.target.value
-        })
-    }
-
-    addFoodOptionHandler = () => {
-        this.setState(prevState => ({
-            food: [...prevState.food, { name: this.state.foodOption, quantity: 1 }]
-        }));
-    } 
-
-    removeFoodOptionHandler = (foodItem, idx) => {
-        const removeFoodItem = firebase.database().ref(`/foodItems/${foodItem}`).remove();
-
-        removeFoodItem
-        .then(() =>{
-            this.setState({
-                foodOptionsArr: this.state.foodOptionsArr.filter((_, i) => i !== idx)
-            })
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-    }
 
     nappyHandler = (event) => {
         if (event.target.value === 'dirty'){
@@ -437,16 +411,6 @@ class FeedForm extends Component {
                         postFoodOptionHandler={this.postFoodOptionHandler.bind(this)}
                     />
                 </Route>
-                {/* <Route path='/add-nappy' exact>
-                    <NappyForm {...this.state}
-                        label='Add Nappy'
-                        handleDateChange={this.handleDateChange.bind(this)}
-                        handleTimeChange={this.handleTimeChange.bind(this)}
-                        nappyHandler={this.nappyHandler.bind(this)}
-                        notesHandler={this.notesHandler.bind(this)}
-                        postDataHandler={this.postDataHandler.bind(this)}
-                    />
-                </Route> */}
                 <Route path='/calendar'>
                     <h2>Calendar <i className="fa fa-calendar" aria-hidden="true"></i></h2>
                     <Calendar onChange={this.handleCalendarDateChange} value={this.state.calendarDate}/>
@@ -454,14 +418,20 @@ class FeedForm extends Component {
                         pathname: '/by-day',
                         search: `?date=${this.state.calendarDate.toLocaleDateString().slice(0,10)}`
                     }}>
-                        <Button label='Proceed' selectedDate={this.state.calendarDate} clicked={this.nextDateHandler}/>
+                        <Button label='Proceed' selectedDate={this.state.calendarDate} clicked={this.calendarSubmit}/>
                     </Link>
                 </Route>
                 <Route path='/by-day'>
-                    <FeedListSingle {...this.state} nextDateHandler={this.nextDateHandler.bind(this)} prevDateHandler={this.prevDateHandler.bind(this)} componentDidMount={this.componentDidMount.bind(this)}/>
+                    <FeedListSingle {...this.state} 
+                        nextDateHandler={this.nextDateHandler.bind(this)} 
+                        prevDateHandler={this.prevDateHandler.bind(this)} 
+                        // componentDidMount={this.componentDidMount.bind(this)} 
+                        removeFeedItemHandler={this.removeFeedItemHandler.bind(this)} />
                 </Route>
                 <Route path='/config'>
                     <Config label='Config' {...this.state} 
+                        foodOptionHandler={this.foodOptionHandler.bind(this)}
+                        postFoodOptionHandler={this.postFoodOptionHandler.bind(this)}
                         removeFoodOptionHandler={this.removeFoodOptionHandler.bind(this)}
                         />
                 </Route>

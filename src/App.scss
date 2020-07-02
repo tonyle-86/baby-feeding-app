@@ -98,7 +98,12 @@ label {
     margin-right: 0;
   }
 
-  &.fa-trash {
+  &.fa-trash-o, &.fa-trash {
+    cursor: pointer;
+  }
+
+  &.fa-toggle-on,
+  &.fa-toggle-off {
     cursor: pointer;
   }
 

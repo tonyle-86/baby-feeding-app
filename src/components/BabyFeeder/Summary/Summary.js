@@ -37,7 +37,7 @@ class FeedsList extends Component {
         let groupDates;
 
         if(this.props.feeds.length === 0){
-            groupDates = <h1>There are currently no feeds</h1>
+            groupDates = <h3>There are currently no feeds</h3>
         } else {      
             // groupDates = feeds.map((item, idx) => {
             //     console.log(this.props.feeds[item]);

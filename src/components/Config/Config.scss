@@ -5,11 +5,11 @@
     padding: 0;
 
     .food-item {
-        background-color: $color3;
-        padding: 5px;
+        padding: 8px;
         margin: 5px;
-        border-radius: 5px;
         list-style: none;
+        border-bottom: dashed 1px #ebedf1;
+        border-left: solid 3px $color4;
     }
     
 }

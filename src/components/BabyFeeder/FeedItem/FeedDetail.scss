@@ -68,3 +68,18 @@
     }
 
 }
+
+.toggleContainer {
+    display: block;
+    text-align: right;
+}
+
+.modify-buttons {
+    display: block;
+    height: 0;
+    text-align: center;
+
+    .fa {
+        margin: 10px 0;
+    }
+}

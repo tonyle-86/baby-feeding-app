@@ -31,14 +31,11 @@ class Dropdown extends Component {
                 }
                 return 0;
             })
-console.log(optionsArr)
         }
-
-        
 
         const optionsItems = optionsArr.map((i) => {
             return (
-                <DropdownOption type={this.props.type} key={`${i} ${i.food}`} label={i.food ? i.food : i} />
+                <DropdownOption type={this.props.type} key={`${i} ${i.food}`} label={i.food ? i.food : i} onClick={this.props.test}/>
             )
         })
 
@@ -46,6 +43,7 @@ console.log(optionsArr)
             <Aux>
                 {this.props.label ? <label className="label">{this.props.label}:</label> : null}
                 <select className="Dropdown" value={this.props.value} onChange={this.props.changeHandler} >
+                    {/* <option value="" disabled defaultValue='Select your option'>Select your option</option> */}
                     {optionsItems}   
                 </select>
             </Aux>
