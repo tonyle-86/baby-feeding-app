@@ -22,6 +22,14 @@ class FeedListSingle extends Component {
         });
     }
 
+    editFormHandler = () => {
+        // <Route path='/edit'>
+
+
+
+        // </Route>
+    }
+
     getDate = () => {
         let params = (new URL(document.location)).searchParams;
         let date = params.get('date');

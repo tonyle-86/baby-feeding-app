@@ -140,7 +140,7 @@ class Form extends Component {
                 </div>
 
                 <div>
-                    <Textarea label='Notes' changeHandler={this.props.notesHandler.bind(this)}/>
+                    <Textarea label='Notes' changeHandler={this.props.notesHandler.bind(this)} value={this.props.notes}/>
                 </div>
                 
 

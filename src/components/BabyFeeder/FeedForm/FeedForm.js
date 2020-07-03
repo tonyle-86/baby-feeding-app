@@ -4,14 +4,12 @@ import Aux from '../../../hoc/Aux/Aux';
 import axios from 'axios';
 import Summary from '../Summary/Summary';
 import Form from '../Form/Form';
-// import NappyForm from '../NappyForm/NappyForm';
 import Calendar from 'react-calendar';
 import '../../UI/Datepicker/Datepicker.scss';
 import '../../UI/Calendar/Calendar.scss';
 import Button from '../../UI/Button/Button';
 import FeedListSingle from '../FeedListSingle/FeedListSingle';
 import Config from '../../Config/Config';
-import firebase from '../../../firebase';
 
 class FeedForm extends Component {
 
@@ -275,13 +273,13 @@ class FeedForm extends Component {
     }
 
     removeFoodOptionHandler = (foodItem, idx) => {
-        let removeFoodItem = firebase.database().ref(`/foodItems/${foodItem}`).remove();
-
-        removeFoodItem
-        .then(() => {
-            this.setState({
-                foodOptionsArr: this.state.foodOptionsArr.filter((_, i) => i !== idx)
-            })
+        axios.delete(`https://baby-feeder-uat-185a3.firebaseio.com/foodItems/${foodItem}.json`)
+        .then((response) => {
+            if(response){
+                this.setState({
+                    foodOptionsArr: this.state.foodOptionsArr.filter((_, i) => i !== idx)
+                })
+            }
         })
         .catch((error) => {
             console.log(error);
@@ -296,21 +294,41 @@ class FeedForm extends Component {
         return new Date(formattedDate).toString().slice(0, 15);
     }        
     
-
     removeFeedItemHandler = (feedItem, idx) => {
-        let removeFeedItem = firebase.database().ref(`/feeds/${feedItem}`).remove();
-        removeFeedItem
-            .then(() => {
+        axios.delete(`https://baby-feeder-uat-185a3.firebaseio.com/feeds/${feedItem}.json`)
+        .then((response) => {
+            if(response){
+                console.log(response);
                 this.fetchFeedsData();
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-
-
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        })
     }
 
-    
+    editFormHandler = () => {
+        // <Route path='/edit'>
+
+
+
+        // </Route>
+    }
+
+    // removeFeedItemHandler = (feedItem, idx) => {
+    //     const payload 
+    //     axios.puts(`https://baby-feeder-uat-185a3.firebaseio.com/feeds/${feedItem}.json`,payload)
+    //         .then((response) => {
+    //             if (response) {
+    //                 console.log(response);
+    //                 this.fetchFeedsData();
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //     })
+    // }
+
     milkChangeHandler = event => {
         this.setState({
             milk: event.target.value
@@ -394,7 +412,7 @@ class FeedForm extends Component {
                     <Summary label='Summary' {...this.state} componentDidMount={this.componentDidMount.bind(this)}/>
                     {loadMore}
                 </Route>
-                <Route path='/add-feed' exact>
+                <Route path={['/add-feed', '/edit']} exact>
                     <Form {...this.state} 
                         label='Add feed'
                         handleDateChange={this.handleDateChange.bind(this)} 
