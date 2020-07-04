@@ -115,8 +115,7 @@ class FeedsList extends Component {
 
         return (
             <Aux>
-                <h2>{this.props.label} <i className="fa fa-list-alt" aria-hidden="true"></i>
-                </h2>
+                <h2>{this.props.label}</h2>
                 {groupDates}
             </Aux>
         )

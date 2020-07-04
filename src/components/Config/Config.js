@@ -14,7 +14,7 @@ class Config extends Component {
 
         return (
             <Aux>
-                <h2>{this.props.label} <i className="fa fa-cogs" aria-hidden="true"> </i></h2>
+                <h2>{this.props.label}</h2>
                 <h3>Food options</h3>
                 <ul className='food-items'>
                     {foodOptionsList}

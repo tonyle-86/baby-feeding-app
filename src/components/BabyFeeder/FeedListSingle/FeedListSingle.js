@@ -60,7 +60,10 @@ class FeedListSingle extends Component {
             return i === selectedDate;
         }).map((x) => {
             return this.props.feeds[x].map((item, idx) => {
-                return <FeedDetail {...this.state} time={item.time} simpleTime={item.simpleTime} key={idx} idx={idx} milk={item.milk} notes={item.notes} dirty={item.nappies.dirty} wet={item.nappies.wet} fbKey={item.fbKey} click={this.props.removeFeedItemHandler} removeFeedItemHandler={this.removeToggleHandler.bind(this)} clickEditHandler={this.props.clickEditHandler.bind(this)}/>
+                const food = item.food.map((i,index) => {
+                    return <div key={index + i.name}>{i.quantity} {i.name}</div>
+                });
+                return <FeedDetail {...this.state} time={item.time} simpleTime={item.simpleTime} key={idx} idx={idx} milk={item.milk} notes={item.notes} dirty={item.nappies.dirty} wet={item.nappies.wet} food={food} fbKey={item.fbKey} click={this.props.removeFeedItemHandler} removeFeedItemHandler={this.removeToggleHandler.bind(this)} clickEditHandler={this.props.clickEditHandler.bind(this)}/>
             })
         })
 
@@ -108,11 +111,11 @@ class FeedListSingle extends Component {
                     <Link to='/calendar'>
                         <span className='icon'>
                             <i className="fa fa-arrow-left" aria-hidden="true"></i>
-                            <strong>Back to calender <i className="fa fa-calendar fa-1x" aria-hidden="true"></i></strong>
+                            <strong>Calender</strong>
                         </span>
                     </Link>
                     
-                    <div className='toggleContainer'>Off {removeToggle} On</div>
+                <div className='toggleContainer'><span className='edit-text'>Toggle edit:</span> <span className='edit-toggle'>{removeToggle}</span></div>
 
                 </div>
                 <div className="feed-details">

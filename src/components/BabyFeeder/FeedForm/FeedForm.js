@@ -236,7 +236,7 @@ class FeedForm extends Component {
             this.postFoodOptionHandler();
         }
         this.setState(prevState => ({
-            food: [...prevState.food, { name: '', quantity: 1 }]
+            food: [...prevState.food, { name: 'Banana', quantity: 1 }]
         }));
     }
 
@@ -382,8 +382,6 @@ class FeedForm extends Component {
     }
 
     clickEditHandler = (fbKey, simpleTime) => {
-        //this.getFeedItem(fbKey) 
-        console.log(fbKey, simpleTime);
         this.setState({
             fbKey: fbKey,
             simpleTime: simpleTime
@@ -401,7 +399,7 @@ class FeedForm extends Component {
                     time: new Date(data.time),
                     simpleTime: data.simpleTime,
                     milk: data.milk,
-                    food: data.food,
+                    food: data.food ? data.food : [],
                     // foodOption: this.state.foodOption,
                     notes: data.notes,
                     nappies: data.nappies
@@ -444,7 +442,7 @@ class FeedForm extends Component {
                     />
                 </Route>
                 <Route path='/calendar'>
-                    <h2>Calendar <i className="fa fa-calendar" aria-hidden="true"></i></h2>
+                    <h2>Calendar</h2>
                     <Calendar onChange={this.handleCalendarDateChange} value={this.state.calendarDate}/>
                     <Link to={{
                         pathname: '/by-day',

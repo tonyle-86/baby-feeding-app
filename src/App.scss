@@ -73,7 +73,7 @@ label {
 // }
 
 .link-container {
-  margin: 10px 10px 10px 0;
+  margin: 10px 0;
 
   a {
     color: $color1;
@@ -90,16 +90,20 @@ label {
   color: $color1;
   transition: all 0.4s linear;
   margin-right: 5px;
-  &:hover {
-    color: $color4;
-  }
+
   
   &.fa-baby-bottle {
     margin-right: 0;
   }
 
-  &.fa-trash-o, &.fa-trash {
+  &.fa-trash-o, 
+  &.fa-trash ,
+  &.fa-pencil,
+  &.fa-times{
     cursor: pointer;
+    &:hover {
+      color: $color4;
+    }
   }
 
   &.fa-toggle-on,

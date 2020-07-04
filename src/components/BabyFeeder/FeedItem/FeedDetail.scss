@@ -72,6 +72,15 @@
 .toggleContainer {
     display: block;
     text-align: right;
+
+    .edit-text {
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    // .edit-toggle {
+    //     float: right;
+    // }
 }
 
 .modify-buttons {
