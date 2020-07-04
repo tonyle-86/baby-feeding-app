@@ -16,6 +16,7 @@ class FeedForm extends Component {
     state = {
         date: new Date(),
         time: new Date(),
+        simpleTime: new Date().toTimeString().slice(0, 5),
         milk: 0,
         notes: '',
         foodOption:'',
@@ -30,10 +31,9 @@ class FeedForm extends Component {
         prevDate: new Date(),
         test: [],
         noOfResultsToShow: 2,
-        nappies: {
-            wet: 0,
-            dirty: 0
-        }
+        fbKey: '',
+        nappies: 'none',
+        
     };
 
     handleDateChange = (date) => {
@@ -115,14 +115,12 @@ class FeedForm extends Component {
         const payload = {
             date: this.state.date.toDateString(),
             time: this.state.time.toString(),
+            simpleTime: this.state.time.toTimeString().slice(0, 5),
             milk: parseInt(this.state.milk),
             food: [...this.state.food],
             foodOption: this.state.foodOption,
             notes: this.state.notes,
-            nappies: {
-                wet: this.state.nappies.wet,
-                dirty: this.state.nappies.dirty
-            }
+            nappies: this.state.nappies
         };
 
         axios.post('https://baby-feeder-uat-185a3.firebaseio.com/feeds.json', payload)
@@ -130,13 +128,11 @@ class FeedForm extends Component {
             this.setState({
                 date: new Date(),
                 time: new Date(),
+                simpleTime: new Date().toTimeString().slice(0, 5),
                 milk: 0,
                 notes: '',  
                 food: [],
-                nappies: {
-                    wet: 0,
-                    dirty: 0
-                },
+                nappies:'none',
                 hasSubmitted: true,
                 isLoading: true
             });
@@ -380,19 +376,37 @@ class FeedForm extends Component {
     )}
 
     nappyHandler = (event) => {
-        if (event.target.value === 'dirty'){
-            this.setState({
-                nappies: {dirty: 1, wet: 0}
-            })
-        } else if (event.target.value === 'wet'){
-            this.setState({
-                nappies: { dirty: 0, wet: 1 }
-            })
-        } else {
-            this.setState({
-                nappies: { dirty: 0, wet: 0}
-            })
-        }
+        this.setState({
+            nappies: event.target.value
+        })
+    }
+
+    clickEditHandler = (fbKey, simpleTime) => {
+        //this.getFeedItem(fbKey) 
+        console.log(fbKey, simpleTime);
+        this.setState({
+            fbKey: fbKey,
+            simpleTime: simpleTime
+        })
+        this.getFeedItem(fbKey)
+    }
+
+    getFeedItem = (fbKey) => {
+        axios.get(`https://baby-feeder-uat-185a3.firebaseio.com/feeds/${fbKey}.json`)
+            .then((response => {
+                console.log(response.data)
+                const data = response.data;
+                this.setState({
+                    date: new Date(data.date),
+                    time: new Date(data.time),
+                    simpleTime: data.simpleTime,
+                    milk: data.milk,
+                    food: data.food,
+                    // foodOption: this.state.foodOption,
+                    notes: data.notes,
+                    nappies: data.nappies
+                })
+        }))
     }
 
     render() {
@@ -443,6 +457,7 @@ class FeedForm extends Component {
                     <FeedListSingle {...this.state} 
                         nextDateHandler={this.nextDateHandler.bind(this)} 
                         prevDateHandler={this.prevDateHandler.bind(this)} 
+                        clickEditHandler={this.clickEditHandler.bind(this)}
                         // componentDidMount={this.componentDidMount.bind(this)} 
                         removeFeedItemHandler={this.removeFeedItemHandler.bind(this)} />
                 </Route>

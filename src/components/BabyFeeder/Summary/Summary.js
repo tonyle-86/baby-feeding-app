@@ -36,6 +36,35 @@ class FeedsList extends Component {
 
         let groupDates;
 
+        let nappies = Object.fromEntries(Object
+            .entries(this.props.feeds)
+            .map(([key, values]) => [
+                key,
+                values.reduce((r, { nappies }) => {
+                    r[nappies] = (r[nappies] || 0) + 1;
+                    return r;
+                }, {})
+            ])
+        );
+    
+        const nappyKey = Object.keys(nappies);
+
+        let wetNappies = nappyKey.map((item,idx) => {
+            if (nappies[item].wet === undefined) {
+                return 0
+            } else {
+                return nappies[item].wet
+            }
+        })
+
+        let dirtyNappies = nappyKey.map((item, idx) => {
+            if (nappies[item].dirty === undefined) {
+                return 0
+            } else {
+                return nappies[item].dirty
+            }
+        })
+        
         if(this.props.feeds.length === 0){
             groupDates = <h3>There are currently no feeds</h3>
         } else {      
@@ -54,8 +83,21 @@ class FeedsList extends Component {
             //     })}</FeedDateItem>
             // })
 
+
+
+
+
+                
+
+
+
+
+
+
+
+
             groupDates = this.props.test.map((item,idx) => {
-                return <FeedDateItem key={idx} date={item[1][0].date} total={this.dailyTotalOf('milk')[idx]} totalWet={this.dailyTotalOf('wet')[idx]} totalDirty={this.dailyTotalOf('dirty')[idx]}>
+                return <FeedDateItem key={idx} date={item[1][0].date} total={this.dailyTotalOf('milk')[idx]} totalWet={wetNappies[idx]} totalDirty={dirtyNappies[idx]}>
                     {item[1].map((x,idx) => {
 
                     let foodEatenAtTime;
@@ -65,7 +107,7 @@ class FeedsList extends Component {
                         })
                     }
 
-                        return <FeedDetail food={x.food ? foodEatenAtTime : null} key={x.time + x.milk + this.dailyTotalOf('milk')[idx]} milk={x.milk} time={x.time} notes={x.notes} dirty={x.nappies.dirty} wet={x.nappies.wet}/>
+                        return <FeedDetail food={x.food ? foodEatenAtTime : null} key={x.time + x.milk + this.dailyTotalOf('milk')[idx]} milk={x.milk} time={x.time} notes={x.notes} nappies={x.nappies}/>
                 })}
                 </FeedDateItem>
             })

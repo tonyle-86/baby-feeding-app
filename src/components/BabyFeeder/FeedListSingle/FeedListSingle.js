@@ -6,28 +6,29 @@ import Button from '../../UI/Button/Button';
 import FeedTotal from '../FeedItem/FeedTotal';
 import FeedDate from '../FeedItem/FeedDate';
 
+
 class FeedListSingle extends Component {
 
     // componentDidMount() {
     //     this.props.componentDidMount();
     // }
 
+    componentDidMount() {
+        //this.props.componentDidMount();
+    }
+
     state = {
         removeToggle: false
     }
+
+
+
+
 
     removeToggleHandler = () => {
         this.setState((prevState) => {
             return { removeToggle: !prevState.removeToggle };
         });
-    }
-
-    editFormHandler = () => {
-        // <Route path='/edit'>
-
-
-
-        // </Route>
     }
 
     getDate = () => {
@@ -59,7 +60,7 @@ class FeedListSingle extends Component {
             return i === selectedDate;
         }).map((x) => {
             return this.props.feeds[x].map((item, idx) => {
-                return <FeedDetail {...this.state} time={item.time} key={idx} idx={idx} milk={item.milk} notes={item.notes} dirty={item.nappies.dirty} wet={item.nappies.wet} fbKey={item.fbKey} click={this.props.removeFeedItemHandler} removeFeedItemHandler={this.removeToggleHandler.bind(this)}/>
+                return <FeedDetail {...this.state} time={item.time} simpleTime={item.simpleTime} key={idx} idx={idx} milk={item.milk} notes={item.notes} dirty={item.nappies.dirty} wet={item.nappies.wet} fbKey={item.fbKey} click={this.props.removeFeedItemHandler} removeFeedItemHandler={this.removeToggleHandler.bind(this)} clickEditHandler={this.props.clickEditHandler.bind(this)}/>
             })
         })
 

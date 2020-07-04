@@ -104,8 +104,10 @@ class Form extends Component {
                     </div>
                     <div className='half-coloumn'>
                     <label>Time:</label>
-                    <Input type='time' change={this.props.handleTimeChange} defaultValue={this.props.time.toTimeString().slice(0, 5)}/>
+                    <Input type='time' change={this.props.handleTimeChange} defaultValue={this.props.simpleTime}/>
                     </div></div>
+
+                {console.log(this.props.simpleTime)}
 
 
                 <Dropdown type='milk' label='Milk' value={this.props.milk} 
@@ -124,17 +126,17 @@ class Form extends Component {
                         <label>Nappy:</label>
                     </div>
                     <div className='third-coloumn'>
-                        <Radio type='radio' change={this.props.nappyHandler}
-                            label={<Aux><i className="fa fa-ban fa-1-5x" aria-hidden="true"></i><span>None</span></Aux>} name='nappy' id='none' />
+                        <Radio type='radio' change={this.props.nappyHandler} nappies={this.props.nappies}
+                            label={<Aux><i className="fa fa-ban fa-1-5x" aria-hidden="true"></i><span>None</span></Aux>} name='nappy' id='none' value='none'/>
                     </div>
                     <div className='third-coloumn'>
-                        <Radio type='radio' change={this.props.nappyHandler} 
+                        <Radio type='radio' change={this.props.nappyHandler} nappies={this.props.nappies}
                             label={<Aux><i className="fa fa-nappy-wet fa-1-5x" aria-hidden="true"></i><span>Wet</span></Aux>} 
-                        name='nappy' id='wet' />
+                        name='nappy' id='wet' value='wet'/>
                     </div>
                     <div className='third-coloumn'>
-                        <Radio type='radio' change={this.props.nappyHandler} 
-                            label={<Aux><i className="fa fa-nappy-dirty fa-1-5x" aria-hidden="true"></i><span>Dirty</span></Aux>} name='nappy' id='dirty' />
+                        <Radio type='radio' change={this.props.nappyHandler} nappies={this.props.nappies}
+                            label={<Aux><i className="fa fa-nappy-dirty fa-1-5x" aria-hidden="true"></i><span>Dirty</span></Aux>} name='nappy' id='dirty' value='dirty'/>
                     </div>
                     
                 </div>
