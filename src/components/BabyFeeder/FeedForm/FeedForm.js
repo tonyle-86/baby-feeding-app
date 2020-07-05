@@ -294,7 +294,6 @@ class FeedForm extends Component {
         axios.delete(`https://baby-feeder-uat-185a3.firebaseio.com/feeds/${feedItem}.json`)
         .then((response) => {
             if(response){
-                console.log(response);
                 this.fetchFeedsData();
             }
         })
@@ -392,7 +391,6 @@ class FeedForm extends Component {
     getFeedItem = (fbKey) => {
         axios.get(`https://baby-feeder-uat-185a3.firebaseio.com/feeds/${fbKey}.json`)
             .then((response => {
-                console.log(response.data)
                 const data = response.data;
                 this.setState({
                     date: new Date(data.date),
@@ -405,6 +403,10 @@ class FeedForm extends Component {
                     nappies: data.nappies
                 })
         }))
+    }
+
+    updateFeedItem = () => {
+        console.log('UPDATED FEED ITEM');
     }
 
     render() {
@@ -424,9 +426,10 @@ class FeedForm extends Component {
                     <Summary label='Summary' {...this.state} componentDidMount={this.componentDidMount.bind(this)}/>
                     {loadMore}
                 </Route>
-                <Route path={['/add-feed', '/edit']} exact>
+                <Route path={['/add-feed']} exact>
                     <Form {...this.state} 
                         label='Add feed'
+                        submitLabel='Submit'
                         handleDateChange={this.handleDateChange.bind(this)} 
                         handleTimeChange={this.handleTimeChange.bind(this)}
                         milkChangeHandler={this.milkChangeHandler.bind(this)}
@@ -439,6 +442,7 @@ class FeedForm extends Component {
                         postDataHandler={this.postDataHandler.bind(this)}
                         foodOptionHandler={this.foodOptionHandler.bind(this)}
                         postFoodOptionHandler={this.postFoodOptionHandler.bind(this)}
+                        updateFeedItem={this.updateFeedItem.bind(this)}
                     />
                 </Route>
                 <Route path='/calendar'>
@@ -458,6 +462,23 @@ class FeedForm extends Component {
                         clickEditHandler={this.clickEditHandler.bind(this)}
                         // componentDidMount={this.componentDidMount.bind(this)} 
                         removeFeedItemHandler={this.removeFeedItemHandler.bind(this)} />
+                </Route>
+                <Route path={['/edit']} exact>
+                    <Form {...this.state}
+                        label='Edit feed'
+                        submitLabel='Save edits'
+                        handleDateChange={this.handleDateChange.bind(this)}
+                        handleTimeChange={this.handleTimeChange.bind(this)}
+                        milkChangeHandler={this.milkChangeHandler.bind(this)}
+                        addAdditionalFoodHandler={this.addAdditionalFoodHandler.bind(this)}
+                        removeFoodHandler={this.removeFoodHandler.bind(this)}
+                        foodChangeHandler={this.foodChangeHandler.bind(this)}
+                        foodQuantityHandler={this.foodChangeHandler.bind(this)}
+                        nappyHandler={this.nappyHandler.bind(this)}
+                        notesHandler={this.notesHandler.bind(this)}
+                        postDataHandler={this.updateFeedItem.bind(this)}
+                        foodOptionHandler={this.foodOptionHandler.bind(this)}
+                    />
                 </Route>
                 <Route path='/config'>
                     <Config label='Config' {...this.state} 

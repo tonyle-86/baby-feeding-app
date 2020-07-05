@@ -60,9 +60,12 @@ class FeedListSingle extends Component {
             return i === selectedDate;
         }).map((x) => {
             return this.props.feeds[x].map((item, idx) => {
-                const food = item.food.map((i,index) => {
-                    return <div key={index + i.name}>{i.quantity} {i.name}</div>
-                });
+                let food;
+                if (item.food){
+                    food = item.food.map((i,index) => {
+                        return <div key={index + i.name}>{i.quantity} {i.name}</div>
+                    });
+                }
                 return <FeedDetail {...this.state} time={item.time} simpleTime={item.simpleTime} key={idx} idx={idx} milk={item.milk} notes={item.notes} dirty={item.nappies.dirty} wet={item.nappies.wet} food={food} fbKey={item.fbKey} click={this.props.removeFeedItemHandler} removeFeedItemHandler={this.removeToggleHandler.bind(this)} clickEditHandler={this.props.clickEditHandler.bind(this)}/>
             })
         })

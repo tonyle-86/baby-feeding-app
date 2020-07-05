@@ -16,59 +16,54 @@ class Form extends Component {
 
     render(){
         let addFoodOption;
-
         let addFoodSection;
+
         if (this.props.food){
-        addFoodSection = this.props.food.map((item, idx) => {
-            return <div key={idx} className='coloumn-container'>
+            addFoodSection = this.props.food.map((item, idx) => {
+                return <div key={idx} className='coloumn-container'>
 
-                <div className='half-coloumn half-coloumn--alt'>
-                    <Dropdown type='food'
-                        foodOptionsArr={this.props.foodOptionsArr}
-                        className='dropdown-food'
-                        value={this.props.food[idx].name}
-                        test={() => this.props.test}
-                        changeHandler={event => {
-                            const { food } = this.props;
-                            food[idx] = {
-                                name: event.target.value,
-                                quantity: this.props.food[idx].quantity
-                            };
-                            this.props.foodChangeHandler();
-                        }}
-                    />
+                    <div className='half-coloumn half-coloumn--alt'>
+                        <Dropdown type='food'
+                            foodOptionsArr={this.props.foodOptionsArr}
+                            className='dropdown-food'
+                            value={this.props.food[idx].name}
+                            test={() => this.props.test}
+                            changeHandler={event => {
+                                const { food } = this.props;
+                                food[idx] = {
+                                    name: event.target.value,
+                                    quantity: this.props.food[idx].quantity
+                                };
+                                this.props.foodChangeHandler();
+                            }}
+                        />    
+                    </div>
                     
-                </div>
-                
-                <div className='half-coloumn half-coloumn--alt'>
-                    <Input key={idx}
-                        
-                        type='number'
-                        pattern='\d*'
-                        className='quantity-food'
-                        value={this.props.food[idx].quantity}
-                        change={event => {
-                            const { food } = this.props;
-                            food[idx] = {
-                                name: this.props.food[idx].name,
-                                quantity: event.target.value,
-                            };
-                            this.props.foodChangeHandler();
-                        }}
-                    />
-                </div>
+                    <div className='half-coloumn half-coloumn--alt'>
+                        <Input key={idx}
+                            type='number'
+                            pattern='\d*'
+                            className='quantity-food'
+                            value={this.props.food[idx].quantity}
+                            change={event => {
+                                const { food } = this.props;
+                                food[idx] = {
+                                    name: this.props.food[idx].name,
+                                    quantity: event.target.value,
+                                };
+                                this.props.foodChangeHandler();
+                            }}
+                        />
+                    </div>
 
-                <div className='trash'>                
-                    <span className='icon' onClick={() => this.props.removeFoodHandler(idx)}>   
-                        <i className='fa fa-times fa-1-5x' aria-hidden='true'></i>                                  
-                    </span>
+                    <div className='trash'>                
+                        <span className='icon' onClick={() => this.props.removeFoodHandler(idx)}>   
+                            <i className='fa fa-times fa-1-5x' aria-hidden='true'></i>                                  
+                        </span>
+                    </div>    
                 </div>
-                
-            </div>
-
-        });
-
-    }
+            });
+        }
 
         let foodLabels;
 
@@ -155,12 +150,10 @@ class Form extends Component {
                         
                     </div>
                     <div className='half-coloumn'>
-                        <Button clicked={this.props.postDataHandler} styleName={`${disabledSubmit} submit width-100`} label='Submit' />
+                        <Button clicked={this.props.postDataHandler} styleName={`${disabledSubmit} submit width-100`} label={this.props.submitLabel} />
                     </div>
                 </div>
-
             </Aux>
-
         )
     }
 }
