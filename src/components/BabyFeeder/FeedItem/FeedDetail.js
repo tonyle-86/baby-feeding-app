@@ -18,7 +18,7 @@ class FeedDetail extends Component {
         return (
            
             <div className="feed-item"> 
-                <Route path='/by-day'>
+                <Route path='/calendar'>
                     
                     <div className='modify-buttons'>
                         {deleteButton}

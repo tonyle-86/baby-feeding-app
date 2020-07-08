@@ -21,9 +21,11 @@ class FeedListSingle extends Component {
         removeToggle: false
     }
 
-
-
-
+    dateNoSlash = (date) => {
+        let dateNew = date.toLocaleDateString().slice(0, 10);
+        dateNew = dateNew.replace(/\//g, '');
+        return dateNew
+    }
 
     removeToggleHandler = () => {
         this.setState((prevState) => {
@@ -32,15 +34,13 @@ class FeedListSingle extends Component {
     }
 
     getDate = () => {
-        let params = (new URL(document.location)).searchParams;
-        let date = params.get('date');
-        
-        const formattedDate = `${date.slice(3, 5)}/${date.slice(0, 2)}/${date.slice(6, 10)}`
+        let date = this.props.match.params.id;
+        const formattedDate = `${date.slice(2, 4)}/${date.slice(0, 2)}/${date.slice(4, 8)}`
+        console.log('formattedDate',formattedDate)
         return new Date(formattedDate).toString().slice(0, 15);
     }
 
     render() {
-
         const feeds = Object.keys(this.props.feeds);
 
         let selectedDate;
@@ -128,16 +128,12 @@ class FeedListSingle extends Component {
 
                 <div className='coloumn-container'>
                     <div className='half-coloumn'>
-                        <Link to={{
-                            pathname: '/by-day',
-                            search: `?date=${this.props.prevDate.toLocaleDateString().slice(0, 10)}`}}>
+                        <Link to={`/calendar/${this.dateNoSlash(this.props.prevDate)}`}>
                             <Button icon='fa fa-chevron-left prev fl' styleName='half-width' label='Prev' clicked={this.props.prevDateHandler} />
                         </Link>
                     </div>
                     <div className='half-coloumn'>
-                        <Link to={{
-                            pathname: '/by-day',
-                            search: `?date=${this.props.nextDate.toLocaleDateString().slice(0, 10)}`}}>
+                        <Link to={`/calendar/${this.dateNoSlash(this.props.nextDate)}`}>
                             <Button icon='fa fa-chevron-right next fr' styleName='half-width fr' label='Next' clicked={this.props.nextDateHandler} />
                         </Link>
                     </div>
@@ -147,5 +143,6 @@ class FeedListSingle extends Component {
         )
     }
 }
+
 
 export default FeedListSingle;

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import FeedDateItem from '../FeedItem/FeedDateItem';
 import FeedDetail from '../FeedItem/FeedDetail';
 import Aux from '../../../hoc/Aux/Aux';
+import Button from '../../UI/Button/Button';
 
 class FeedsList extends Component {
 
@@ -64,6 +65,12 @@ class FeedsList extends Component {
                 return nappies[item].dirty
             }
         })
+
+        let loadMore = null;
+
+        if (this.props.noOfResultsToShow < this.props.feedsLength) {
+            loadMore = <Button styleName='width-100' label='Load more' clicked={this.props.loadMore} />
+        }
         
         if(this.props.feeds.length === 0){
             groupDates = <h3>There are currently no feeds</h3>
@@ -117,6 +124,7 @@ class FeedsList extends Component {
             <Aux>
                 <h2>{this.props.label}</h2>
                 {groupDates}
+                {loadMore}
             </Aux>
         )
     }

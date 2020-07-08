@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Redirect, Link } from 'react-router-dom';
+import { Route, Redirect, Link, matchPath} from 'react-router-dom';
 import Aux from '../../../hoc/Aux/Aux';
 import axios from 'axios';
 import Summary from '../Summary/Summary';
@@ -202,21 +202,42 @@ class FeedForm extends Component {
         }
     }
 
+    getUrlParams = (pathname) => {
+        const matchedProfile = matchPath(pathname, {
+            path: '/calendar/:id'
+        });
+
+        return (matchedProfile && matchedProfile.params) || {}
+    }
+
+    dateNoSlash = (date) => {
+        //console.log(this.props.location)
+        // let id = this.getUrlParams(this.props.location.pathname);
+
+        // id = id.id;
+
+        let dateNew = date.toLocaleDateString().slice(0, 10);
+        dateNew = dateNew.replace(/\//g, '');
+        return dateNew
+    }
+
     componentDidMount() {
         this.fetchFeedsData();
         this.fetchFoodOptionsHandler();
         this.nextDateHandler()
         this.prevDateHandler();
 
-        let params = (new URL(document.location)).searchParams;
-        let date = params.get('date');
-
+        // calendar
         let activeDate,
             nextDate,
-            prevDate
+            prevDate;
 
-        if (date) {
-            const formattedDate = `${date.slice(3, 5)}/${date.slice(0, 2)}/${date.slice(6, 10)}`
+        let id = this.getUrlParams(this.props.location.pathname);
+
+        id = id.id;
+
+        if (id) {
+            const formattedDate = `${id.slice(2, 4)}/${id.slice(0, 2)}/${id.slice(4, 8)}`
             activeDate = new Date(formattedDate).toString().slice(0, 15);
             nextDate = new Date(formattedDate);
             prevDate = new Date(formattedDate);
@@ -225,9 +246,9 @@ class FeedForm extends Component {
         }
 
         this.setState({
-            calendarDate: date ? new Date(activeDate) : new Date(),
-            nextDate: date ? new Date(nextDate): null,
-            prevDate: date ? new Date(prevDate) : null
+            calendarDate: id ? new Date(activeDate) : new Date(),
+            nextDate: id ? new Date(nextDate): null,
+            prevDate: id ? new Date(prevDate) : null
         })
     }
 
@@ -339,6 +360,8 @@ class FeedForm extends Component {
     nextDateHandler = () => {
         let myDate = new Date(this.state.calendarDate);
 
+        console.log(this.state.nextDate)
+
         this.setState({
             calendarDate: new Date(myDate.setDate(myDate.getDate() + 1)),
             nextDate: new Date(myDate.setDate(myDate.getDate() + 1)),
@@ -410,24 +433,25 @@ class FeedForm extends Component {
     }
 
     render() {
-        let redirectToFeed, loadMore =  null;
+        let redirectToFeed =  null;
 
         if(this.state.hasSubmitted){
             redirectToFeed = <Redirect to='/summary' />
         }
 
-        if (this.state.noOfResultsToShow < this.state.feedsLength) {
-            loadMore = <Button styleName='width-100' label='Load more' clicked={this.loadMore} />
-        }
-
         return (
             <Aux>
-                <Route path='/summary' exact>
-                    <Summary label='Summary' {...this.state} componentDidMount={this.componentDidMount.bind(this)}/>
-                    {loadMore}
-                </Route>
-                <Route path={['/add-feed']} exact>
-                    <Form {...this.state} 
+                <Route path='/summary' exact render={(props) => 
+                    <Summary label='Summary' 
+                        {...props} {...this.state} 
+                        componentDidMount={this.componentDidMount.bind(this)}
+                        loadMore={this.loadMore.bind(this)}
+                    />
+                    }
+                />
+                       
+                <Route path='/add-feed' exact render={(props) => 
+                    <Form {...props} {...this.state} 
                         label='Add feed'
                         submitLabel='Submit'
                         handleDateChange={this.handleDateChange.bind(this)} 
@@ -444,27 +468,28 @@ class FeedForm extends Component {
                         postFoodOptionHandler={this.postFoodOptionHandler.bind(this)}
                         updateFeedItem={this.updateFeedItem.bind(this)}
                     />
-                </Route>
-                <Route path='/calendar'>
+                }/>
+
+                <Route exact path='/calendar'>
                     <h2>Calendar</h2>
                     <Calendar onChange={this.handleCalendarDateChange} value={this.state.calendarDate}/>
-                    <Link to={{
-                        pathname: '/by-day',
-                        search: `?date=${this.state.calendarDate.toLocaleDateString().slice(0,10)}`
-                    }}>
+                    <Link to={`/calendar/${this.dateNoSlash(this.state.calendarDate)}`}>
                         <Button label='Proceed' selectedDate={this.state.calendarDate} clicked={this.calendarSubmit}/>
                     </Link>
                 </Route>
-                <Route path='/by-day'>
-                    <FeedListSingle {...this.state} 
+
+                <Route exact path='/calendar/:id' render={(props) => {
+                    return <FeedListSingle {...props} {...this.state} 
                         nextDateHandler={this.nextDateHandler.bind(this)} 
                         prevDateHandler={this.prevDateHandler.bind(this)} 
                         clickEditHandler={this.clickEditHandler.bind(this)}
                         // componentDidMount={this.componentDidMount.bind(this)} 
                         removeFeedItemHandler={this.removeFeedItemHandler.bind(this)} />
-                </Route>
-                <Route path={['/edit']} exact>
-                    <Form {...this.state}
+                    }} 
+                />    
+
+                <Route path='/edit' exact render={(props) =>                     
+                    <Form {...props} {...this.state}
                         label='Edit feed'
                         submitLabel='Save edits'
                         handleDateChange={this.handleDateChange.bind(this)}
@@ -478,18 +503,19 @@ class FeedForm extends Component {
                         notesHandler={this.notesHandler.bind(this)}
                         postDataHandler={this.updateFeedItem.bind(this)}
                         foodOptionHandler={this.foodOptionHandler.bind(this)}
-                    />
-                </Route>
-                <Route path='/config'>
-                    <Config label='Config' {...this.state} 
+                    />}
+                />
+
+                <Route path='/config' render={(props) => 
+                    <Config label='Config' {...props} {...this.state} 
                         foodOptionHandler={this.foodOptionHandler.bind(this)}
                         postFoodOptionHandler={this.postFoodOptionHandler.bind(this)}
                         removeFoodOptionHandler={this.removeFoodOptionHandler.bind(this)}
-                        />
-                </Route>
-                <Route path='/feedback'>
+                    />}
+                />
+                {/* <Route path='/feedback'>
                     <h1>Feedback</h1>
-                </Route>
+                </Route> */}
 
                 {redirectToFeed}
             </Aux>
