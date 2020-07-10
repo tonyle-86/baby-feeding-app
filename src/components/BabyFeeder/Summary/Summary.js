@@ -114,7 +114,7 @@ class FeedsList extends Component {
                         })
                     }
 
-                        return <FeedDetail food={x.food ? foodEatenAtTime : null} key={x.time + x.milk + this.dailyTotalOf('milk')[idx]} milk={x.milk} time={x.time} notes={x.notes} nappies={x.nappies}/>
+                        return <FeedDetail food={x.food ? foodEatenAtTime : null} key={x.time + x.milk + this.dailyTotalOf('milk')[idx]} milk={x.milk} time={x.date} notes={x.notes} nappies={x.nappies}/>
                 })}
                 </FeedDateItem>
             })

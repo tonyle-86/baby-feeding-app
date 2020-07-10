@@ -90,7 +90,7 @@ class FeedListSingle extends Component {
                         return <div key={index + i.name}>{i.quantity} {i.name}</div>
                     });
                 }
-                return <FeedDetail {...this.state} time={item.time} simpleTime={item.simpleTime} key={idx} idx={idx} milk={item.milk} notes={item.notes} dirty={item.nappies.dirty} wet={item.nappies.wet} food={food} fbKey={item.fbKey} nappies={item.nappies} openModal={() => this.openModal(item.fbKey)} clickEditHandler={this.props.clickEditHandler.bind(this)}/>
+                return <FeedDetail {...this.state} time={item.date} simpleTime={item.simpleTime} key={idx} idx={idx} milk={item.milk} notes={item.notes} dirty={item.nappies.dirty} wet={item.nappies.wet} food={food} fbKey={item.fbKey} nappies={item.nappies} openModal={() => this.openModal(item.fbKey)} clickEditHandler={this.props.clickEditHandler.bind(this)}/>
             })
         })
 

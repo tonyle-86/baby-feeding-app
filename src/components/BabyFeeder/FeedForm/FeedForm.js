@@ -53,7 +53,7 @@ class FeedForm extends Component {
         time = new Date(time.getTime() + (timeOffset * 60 * 1000));
 
         this.setState({
-            time: new Date(time)
+            date: new Date(time)
         })
     };
 
@@ -113,7 +113,7 @@ class FeedForm extends Component {
 
     postDataHandler = () => {
         const payload = {
-            date: this.state.date.toDateString(),
+            date: this.state.date.toString(),
             time: this.state.time.toString(),
             simpleTime: this.state.time.toTimeString().slice(0, 5),
             milk: parseInt(this.state.milk),
@@ -155,19 +155,21 @@ class FeedForm extends Component {
 
                     return {...response.data[i],...keyObj};
                 })
-                .sort((x, y) => {
-                    return new Date(y.time) - new Date(x.time);
-                })
+                // .sort((x, y) => {
+                //     return new Date(y.time) - new Date(x.time);
+                // })
                 .sort((a, b) => {
                     return new Date(b.date) - new Date(a.date);
                 })
 
                 const sortByDateArr = [...feedsByDate];
-
+                // new Date(currentValue.date).toDateString();
                 const groupBy = (array, key) => {
                     return array.reduce((result, currentValue) => {
 
-                        (result[currentValue[key]] = result[currentValue[key]] || []).push(
+                        let test = new Date(currentValue.date).toDateString();
+
+                        (result[currentValue[key].slice(0, 15)] = result[currentValue[key].slice(0, 15)] || []).push(
                             currentValue
                         );
                         return result;
@@ -340,7 +342,7 @@ class FeedForm extends Component {
     updateFeedItem = (feedItem, idx) => {
         console.log(`https://baby-feeder-uat-185a3.firebaseio.com/feeds/${feedItem}.json`)
         const payload = {
-            date: this.state.date.toDateString(),
+            date: this.state.date.toString(),
             time: this.state.time.toString(),
             simpleTime: this.state.time.toTimeString().slice(0, 5),
             milk: parseInt(this.state.milk),
