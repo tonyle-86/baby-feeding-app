@@ -29,10 +29,10 @@ class FeedForm extends Component {
         calendarDate: new Date(),
         nextDate: new Date(),
         prevDate: new Date(),
-        test: [],
-        noOfResultsToShow: 2,
+        feedsArr: [],
+        noOfResultsToShow: 15,
         fbKey: '',
-        nappies: 'none',
+        nappies: 'none'
         
     };
 
@@ -125,18 +125,20 @@ class FeedForm extends Component {
 
         axios.post('https://baby-feeder-uat-185a3.firebaseio.com/feeds.json', payload)
         .then(response => {
-            this.setState({
-                date: new Date(),
-                time: new Date(),
-                simpleTime: new Date().toTimeString().slice(0, 5),
-                milk: 0,
-                notes: '',  
-                food: [],
-                nappies:'none',
-                hasSubmitted: true,
-                isLoading: true
-            });
+            if(response){
+                this.setState({
+                    date: new Date(),
+                    time: new Date(),
+                    simpleTime: new Date().toTimeString().slice(0, 5),
+                    milk: 0,
+                    notes: '',  
+                    food: [],
+                    nappies:'none',
+                    hasSubmitted: true,
+                    isLoading: true
+                });
             this.getLatestFeeds();
+            }
         })
         .catch(error => {
             console.log(error);
@@ -176,14 +178,14 @@ class FeedForm extends Component {
 
                 let feedsLength = Object.entries(feedsGroupedByDate).length;
 
-                let test = Object.entries(feedsGroupedByDate).slice(0,this.state.noOfResultsToShow);
+                let feedsArr = Object.entries(feedsGroupedByDate).slice(0,this.state.noOfResultsToShow);
 
                 this.setState({
                     feeds: feedsGroupedByDate,
                     isLoading: false,
                     hasSubmitted: false,
                     feedsLength: feedsLength,
-                    test: test
+                    feedsArr: feedsArr
                 });
             } else {
                 this.setState({
@@ -194,6 +196,35 @@ class FeedForm extends Component {
         .catch(error => {
             console.log(error);
         })
+    }
+
+    cancelHandler = (page) => {
+        this.setState({
+            date: new Date(),
+            time: new Date(),
+            simpleTime: new Date().toTimeString().slice(0, 5),
+            milk: 0,
+            notes: '',
+            foodOption: '',
+            food: [],
+            feedsLength: 0,
+            isLoading: false,
+            hasSubmitted: false,
+            calendarDate: new Date(),
+            nextDate: new Date(),
+            prevDate: new Date(),
+            fbKey: '',
+            nappies: 'none',
+        })
+
+        this.redirect(page)
+    }
+
+    redirect = (page) => {
+        console.log(page);
+        let redirect = this.props.history.push(`/${page}`);
+
+        return redirect;
     }
 
     getLatestFeeds = () => {
@@ -211,11 +242,6 @@ class FeedForm extends Component {
     }
 
     dateNoSlash = (date) => {
-        //console.log(this.props.location)
-        // let id = this.getUrlParams(this.props.location.pathname);
-
-        // id = id.id;
-
         let dateNew = date.toLocaleDateString().slice(0, 10);
         dateNew = dateNew.replace(/\//g, '');
         return dateNew
@@ -224,8 +250,8 @@ class FeedForm extends Component {
     componentDidMount() {
         this.fetchFeedsData();
         this.fetchFoodOptionsHandler();
-        this.nextDateHandler()
-        this.prevDateHandler();
+        this.dateHandler('next');
+        this.dateHandler('prev');
 
         // calendar
         let activeDate,
@@ -310,40 +336,41 @@ class FeedForm extends Component {
         const formattedDate = `${date.slice(3, 5)}/${date.slice(0, 2)}/${date.slice(6, 10)}`
         return new Date(formattedDate).toString().slice(0, 15);
     }        
-    
-    removeFeedItemHandler = (feedItem, idx) => {
-        axios.delete(`https://baby-feeder-uat-185a3.firebaseio.com/feeds/${feedItem}.json`)
-        .then((response) => {
-            if(response){
-                this.fetchFeedsData();
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-        })
+
+    updateFeedItem = (feedItem, idx) => {
+        console.log(`https://baby-feeder-uat-185a3.firebaseio.com/feeds/${feedItem}.json`)
+        const payload = {
+            date: this.state.date.toDateString(),
+            time: this.state.time.toString(),
+            simpleTime: this.state.time.toTimeString().slice(0, 5),
+            milk: parseInt(this.state.milk),
+            food: [...this.state.food],
+            foodOption: this.state.foodOption,
+            notes: this.state.notes,
+            nappies: this.state.nappies
+        };
+        axios.put(`https://baby-feeder-uat-185a3.firebaseio.com/feeds/${feedItem}.json`,payload)
+            .then((response) => {
+                if (response) {
+                    this.setState({
+                        date: new Date(),
+                        time: new Date(),
+                        simpleTime: new Date().toTimeString().slice(0, 5),
+                        milk: 0,
+                        notes: '',
+                        food: [],
+                        nappies: 'none',
+                        hasSubmitted: true,
+                        isLoading: true,
+                        fbKey: ''
+                    });
+                    this.getLatestFeeds();
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
-
-    editFormHandler = () => {
-        // <Route path='/edit'>
-
-
-
-        // </Route>
-    }
-
-    // removeFeedItemHandler = (feedItem, idx) => {
-    //     const payload 
-    //     axios.puts(`https://baby-feeder-uat-185a3.firebaseio.com/feeds/${feedItem}.json`,payload)
-    //         .then((response) => {
-    //             if (response) {
-    //                 console.log(response);
-    //                 this.fetchFeedsData();
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //     })
-    // }
 
     milkChangeHandler = event => {
         this.setState({
@@ -357,43 +384,37 @@ class FeedForm extends Component {
         })
     }
 
-    nextDateHandler = () => {
+    dateHandler = (expr) => {
         let myDate = new Date(this.state.calendarDate);
-
-        console.log(this.state.nextDate)
-
-        this.setState({
-            calendarDate: new Date(myDate.setDate(myDate.getDate() + 1)),
-            nextDate: new Date(myDate.setDate(myDate.getDate() + 1)),
-            prevDate: new Date(myDate.setDate(myDate.getDate() - 2))
+        switch (expr) {
+            case 'next':
+            this.setState({
+                calendarDate: new Date(myDate.setDate(myDate.getDate() + 1)),
+                nextDate: new Date(myDate.setDate(myDate.getDate() + 1)),
+                prevDate: new Date(myDate.setDate(myDate.getDate() - 2))
+            })
+                break;
+            case 'prev':
+            this.setState({
+                calendarDate: new Date(myDate.setDate(myDate.getDate() - 1)),
+                nextDate: new Date(myDate.setDate(myDate.getDate() + 1)),
+                prevDate: new Date(myDate.setDate(myDate.getDate() - 2))
+            })
+                break;
+            default:
+            this.setState({
+                calendarDate: new Date(myDate.setDate(myDate.getDate())),
+                nextDate: new Date(myDate.setDate(myDate.getDate() + 1)),
+                prevDate: new Date(myDate.setDate(myDate.getDate() - 2))
+            })
+                
         }
-    )}
-
-    calendarSubmit = () => {
-        let myDate = new Date(this.state.calendarDate);
-
-        this.setState({
-            calendarDate: new Date(myDate.setDate(myDate.getDate())),
-            nextDate: new Date(myDate.setDate(myDate.getDate() + 1)),
-            prevDate: new Date(myDate.setDate(myDate.getDate() - 2))
-        }
-        )
-    }
-
-    prevDateHandler = () => {
-        let myDate = new Date(this.state.calendarDate);
-
-        this.setState({
-            calendarDate: new Date(myDate.setDate(myDate.getDate() - 1)),
-            nextDate: new Date(myDate.setDate(myDate.getDate() + 1)),
-            prevDate: new Date(myDate.setDate(myDate.getDate() - 2))
-        })
     }
 
     loadMore = () => {
         this.fetchFeedsData();
         this.setState(prevState => ({
-            noOfResultsToShow: prevState.noOfResultsToShow + 3, 
+            noOfResultsToShow: prevState.noOfResultsToShow + 15, 
         })
     )}
 
@@ -421,15 +442,10 @@ class FeedForm extends Component {
                     simpleTime: data.simpleTime,
                     milk: data.milk,
                     food: data.food ? data.food : [],
-                    // foodOption: this.state.foodOption,
                     notes: data.notes,
                     nappies: data.nappies
                 })
         }))
-    }
-
-    updateFeedItem = () => {
-        console.log('UPDATED FEED ITEM');
     }
 
     render() {
@@ -464,27 +480,31 @@ class FeedForm extends Component {
                         nappyHandler={this.nappyHandler.bind(this)} 
                         notesHandler={this.notesHandler.bind(this)}
                         postDataHandler={this.postDataHandler.bind(this)}
+                        cancelHandler={this.cancelHandler.bind(this)}
                         foodOptionHandler={this.foodOptionHandler.bind(this)}
                         postFoodOptionHandler={this.postFoodOptionHandler.bind(this)}
                         updateFeedItem={this.updateFeedItem.bind(this)}
                     />
                 }/>
 
-                <Route exact path='/calendar'>
-                    <h2>Calendar</h2>
-                    <Calendar onChange={this.handleCalendarDateChange} value={this.state.calendarDate}/>
-                    <Link to={`/calendar/${this.dateNoSlash(this.state.calendarDate)}`}>
-                        <Button label='Proceed' selectedDate={this.state.calendarDate} clicked={this.calendarSubmit}/>
-                    </Link>
+                <Route exact path='/calendar' render={() => {
+                    return <Aux>
+                        <h2>Calendar</h2>
+                        <Calendar onChange={this.handleCalendarDateChange} value={this.state.calendarDate}/>
+                        <Link to={`/calendar/${this.dateNoSlash(this.state.calendarDate)}`}>
+                            <Button label='Proceed' selectedDate={this.state.calendarDate} clicked={() => this.dateHandler('proceed')}/>
+                        </Link>
+                    </Aux>
+                }}>
+
                 </Route>
 
                 <Route exact path='/calendar/:id' render={(props) => {
                     return <FeedListSingle {...props} {...this.state} 
-                        nextDateHandler={this.nextDateHandler.bind(this)} 
-                        prevDateHandler={this.prevDateHandler.bind(this)} 
                         clickEditHandler={this.clickEditHandler.bind(this)}
-                        // componentDidMount={this.componentDidMount.bind(this)} 
-                        removeFeedItemHandler={this.removeFeedItemHandler.bind(this)} />
+                        dateHandler={this.dateHandler.bind(this)}
+                        fetchFeedsData={this.fetchFeedsData.bind(this)}
+                    />
                     }} 
                 />    
 
@@ -501,6 +521,7 @@ class FeedForm extends Component {
                         foodQuantityHandler={this.foodChangeHandler.bind(this)}
                         nappyHandler={this.nappyHandler.bind(this)}
                         notesHandler={this.notesHandler.bind(this)}
+                        cancelHandler={this.cancelHandler.bind(this)}
                         postDataHandler={this.updateFeedItem.bind(this)}
                         foodOptionHandler={this.foodOptionHandler.bind(this)}
                     />}

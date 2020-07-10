@@ -11,7 +11,7 @@ class FeedsList extends Component {
     // }
 
     dailyTotalOf = (type) => {
-       return this.props.test.map((item, idx) => {
+       return this.props.feedsArr.map((item, idx) => {
             return item[1].reduce((a, cv) => {
                 if(type === 'milk'){
                     return a + cv.milk
@@ -103,7 +103,7 @@ class FeedsList extends Component {
 
 
 
-            groupDates = this.props.test.map((item,idx) => {
+            groupDates = this.props.feedsArr.map((item,idx) => {
                 return <FeedDateItem key={idx} date={item[1][0].date} total={this.dailyTotalOf('milk')[idx]} totalWet={wetNappies[idx]} totalDirty={dirtyNappies[idx]}>
                     {item[1].map((x,idx) => {
 

@@ -5,20 +5,17 @@ import { Link } from 'react-router-dom';
 import Button from '../../UI/Button/Button';
 import FeedTotal from '../FeedItem/FeedTotal';
 import FeedDate from '../FeedItem/FeedDate';
+import Backdrop from '../../UI/Backdrop/Backdrop';
+import Modal from '../../UI/Modal/Modal';
+import axios from 'axios';
 
 
 class FeedListSingle extends Component {
 
-    // componentDidMount() {
-    //     this.props.componentDidMount();
-    // }
-
-    componentDidMount() {
-        //this.props.componentDidMount();
-    }
-
     state = {
-        removeToggle: false
+        removeToggle: false,
+        modalOpen: false,
+        deleting: false
     }
 
     dateNoSlash = (date) => {
@@ -36,24 +33,51 @@ class FeedListSingle extends Component {
     getDate = () => {
         let date = this.props.match.params.id;
         const formattedDate = `${date.slice(2, 4)}/${date.slice(0, 2)}/${date.slice(4, 8)}`
-        console.log('formattedDate',formattedDate)
         return new Date(formattedDate).toString().slice(0, 15);
+    }
+
+    removeFeedItemHandler = (feedItem, idx) => {
+        axios.delete(`https://baby-feeder-uat-185a3.firebaseio.com/feeds/${feedItem}.json`)
+            .then((response) => {
+                if (response) {
+                    this.setState({
+                        modalOpen: false,
+                        fbKey: '',
+                        deleting: false
+                    })
+                    this.props.fetchFeedsData();
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
+
+    openModal = (fbKey) => {
+        this.setState({
+            modalOpen: true,
+            fbKey: fbKey,
+            deleting: true
+        })
+    }
+
+    closeModal = () => {
+        console.log('close Modal');
+        this.setState({
+            modalOpen: false
+        })
     }
 
     render() {
         const feeds = Object.keys(this.props.feeds);
 
-        let selectedDate;
-        let filterByDate;
+        let selectedDate, filterByDate, modal;
 
-        // filterByDate = this.props.test.filter(i => {
-        //     selectedDate = this.getDate();
-        //     return i[0] === selectedDate;
-        // }).map((x) => {
-        //     return x[1].map((item, idx) => {
-        //         return <FeedDetail time={item.time} key={idx} milk={item.milk} notes={item.notes} />
-        //     })
-        // })
+        if (this.state.modalOpen) {
+            modal = <Backdrop>
+                <Modal message='Are you sure you want to delete?' fbKey={this.state.fbKey} closeModal={this.closeModal.bind(this)} removeHandler={this.removeFeedItemHandler} label='Confirm' cancelLabel='Cancel'/>
+            </Backdrop>
+        }
 
         filterByDate = feeds.filter(i => {
             selectedDate = this.getDate();
@@ -66,7 +90,7 @@ class FeedListSingle extends Component {
                         return <div key={index + i.name}>{i.quantity} {i.name}</div>
                     });
                 }
-                return <FeedDetail {...this.state} time={item.time} simpleTime={item.simpleTime} key={idx} idx={idx} milk={item.milk} notes={item.notes} dirty={item.nappies.dirty} wet={item.nappies.wet} food={food} fbKey={item.fbKey} click={this.props.removeFeedItemHandler} removeFeedItemHandler={this.removeToggleHandler.bind(this)} clickEditHandler={this.props.clickEditHandler.bind(this)}/>
+                return <FeedDetail {...this.state} time={item.time} simpleTime={item.simpleTime} key={idx} idx={idx} milk={item.milk} notes={item.notes} dirty={item.nappies.dirty} wet={item.nappies.wet} food={food} fbKey={item.fbKey} nappies={item.nappies} openModal={() => this.openModal(item.fbKey)} clickEditHandler={this.props.clickEditHandler.bind(this)}/>
             })
         })
 
@@ -79,36 +103,30 @@ class FeedListSingle extends Component {
             },0)
         })
 
-        let totalWet = feeds.filter(i => {
-            selectedDate = this.getDate();
-            return i === selectedDate;
-        }).map((item, idx) => {
-            return this.props.feeds[item].reduce((a, cv) => {
-                return a + cv.nappies.wet
-            }, 0)
-        });
+        let countedNappies = {};
 
-        let totalDirty = feeds.filter(i => {
+        let totalNappies = feeds.filter(i => {
             selectedDate = this.getDate();
             return i === selectedDate;
-        }).map((item, idx) => {
-            return this.props.feeds[item].reduce((a, cv) => {
-                return a + cv.nappies.dirty
-            }, 0)
-        });
+        }).map((x) => {
+            return this.props.feeds[x].forEach((y) => { 
+                return countedNappies[y.nappies] = (countedNappies[y.nappies] || 0) + 1; 
+            });
+        })
 
         if(filterByDate.length === 0){
             filterByDate = <h3>There are no feeds recorded for this day <span><i className="fa fa-crying-face" aria-hidden="true"></i></span></h3>
         };
 
         if (milkTotal.length) {
-            milkTotal = <FeedTotal feedTotal={milkTotal} totalWet={totalWet} totalDirty={totalDirty}/>
+            milkTotal = <FeedTotal feedTotal={milkTotal} totalWet={countedNappies.wet ? countedNappies.wet : 0} totalDirty={countedNappies.dirty ? countedNappies.dirty : 0}/>
         }
 
         const removeToggle = this.state.removeToggle ? <span><i className="fa fa-toggle-on fa-1-5x" aria-hidden="true" onClick={this.removeToggleHandler}></i></span> : <span><i className="fa fa-toggle-off fa-1-5x" aria-hidden="true" onClick={this.removeToggleHandler}></i></span>;
 
         return(
             <Aux>
+
                 <FeedDate month={new Date(this.props.calendarDate).getMonth().toString()} days={new Date(this.props.calendarDate).getDay().toString()} date={new Date(this.props.calendarDate).getDate().toString()} />
                 <div className='link-container'>
                     <Link to='/calendar'>
@@ -124,21 +142,21 @@ class FeedListSingle extends Component {
                 <div className="feed-details">
                     {milkTotal}
                     {filterByDate}
+                    {modal}
                 </div>
 
                 <div className='coloumn-container'>
                     <div className='half-coloumn'>
                         <Link to={`/calendar/${this.dateNoSlash(this.props.prevDate)}`}>
-                            <Button icon='fa fa-chevron-left prev fl' styleName='half-width' label='Prev' clicked={this.props.prevDateHandler} />
+                            <Button icon='fa fa-chevron-left prev fl' styleName='half-width' label='Prev' clicked={() => this.props.dateHandler('prev')} />
                         </Link>
                     </div>
                     <div className='half-coloumn'>
                         <Link to={`/calendar/${this.dateNoSlash(this.props.nextDate)}`}>
-                            <Button icon='fa fa-chevron-right next fr' styleName='half-width fr' label='Next' clicked={this.props.nextDateHandler} />
+                            <Button icon='fa fa-chevron-right next fr' styleName='half-width fr' label='Next' clicked={() => this.props.dateHandler('next')} />
                         </Link>
                     </div>
                 </div>
-
             </Aux>
         )
     }

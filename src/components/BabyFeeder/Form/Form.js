@@ -8,8 +8,8 @@ import Datepicker, { registerLocale } from 'react-datepicker';
 import Input from '../../UI/Input/Input';
 import Radio from '../../UI/Radio/Radio';
 import './Form.scss';
+import { Route, Redirect } from 'react-router-dom';
 import '../../UI/Datepicker/Datepicker.scss';
-import { Link } from 'react-router-dom';
 registerLocale('en-gb', enGb);
 
 class Form extends Component {
@@ -27,7 +27,7 @@ class Form extends Component {
                             foodOptionsArr={this.props.foodOptionsArr}
                             className='dropdown-food'
                             value={this.props.food[idx].name}
-                            test={() => this.props.test}
+                            feedsArr={() => this.props.test}
                             changeHandler={event => {
                                 const { food } = this.props;
                                 food[idx] = {
@@ -90,7 +90,7 @@ class Form extends Component {
         
         }
 
-        const disabledSubmit = (this.props.milk === 0 || this.props.milk === '0') && this.props.nappies.wet === 0 && this.props.nappies.dirty === 0 && this.props.food.length === 0 && this.props.notes === '' ? 'hide': null;
+        const disabledSubmit = (this.props.milk === 0 || this.props.milk === '0') && this.props.nappies === 'none' && this.props.food.length === 0 && this.props.notes === '' ? 'hide': null;
 
         return(
 
@@ -144,13 +144,10 @@ class Form extends Component {
 
                 <div className='coloumn-container'>
                     <div className='half-coloumn'>
-                        <Link to='/summary'>
-                            <Button styleName='cancel width-100' label='Cancel'/>
-                        </Link>
-                        
+                        <Button clicked={() => this.props.cancelHandler('summary')} styleName='cancel width-100' label='Cancel'/>    
                     </div>
                     <div className='half-coloumn'>
-                        <Button clicked={this.props.postDataHandler} styleName={`${disabledSubmit} submit width-100`} label={this.props.submitLabel} />
+                        <Button clicked={() =>this.props.postDataHandler(this.props.fbKey)} styleName={`${disabledSubmit} submit width-100`} label={this.props.submitLabel} />
                     </div>
                 </div>
             </Aux>

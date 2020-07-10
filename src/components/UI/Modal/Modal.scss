@@ -1,0 +1,19 @@
+@import '../../../variables.scss';
+@import '../../../mixins.scss';
+
+.modal-container {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 10px;
+    box-sizing: border-box;
+    padding:10px;
+    background-color: $color2;
+
+    h3 {
+        margin: 10px 0;
+    }
+
+    .Button {
+        margin-bottom: 10px;
+    }
+}

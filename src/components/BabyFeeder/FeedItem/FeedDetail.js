@@ -8,9 +8,11 @@ class FeedDetail extends Component {
         removeToggle: this.props.removeToggle
     }
 
+        // () => this.props.click(this.props.fbKey, this.props.idx)
+
     render() {
 
-        const deleteButton = this.props.removeToggle ? <i className="fa fa-trash fa-1-5x" aria-hidden="true" onClick={() => this.props.click(this.props.fbKey, this.props.idx)}></i> : null;
+        const deleteButton = this.props.removeToggle ? <i className="fa fa-trash fa-1-5x" aria-hidden="true" onClick={this.props.openModal}></i> : null;
 
         const editButton = this.props.removeToggle ? <Link to={{ pathname: '/edit' }}><i className="fa fa-pencil fa-1-5x" aria-hidden="true" onClick={() => this.props.clickEditHandler(this.props.fbKey, this.props.simpleTime)}></i> </Link>: null;
         
