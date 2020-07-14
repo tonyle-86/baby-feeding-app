@@ -15,7 +15,7 @@ class FeedForm extends Component {
 
     state = {
         date: new Date(),
-        time: new Date(),
+        // time: new Date(),
         simpleTime: new Date().toTimeString().slice(0, 5),
         milk: 0,
         notes: '',
@@ -114,8 +114,8 @@ class FeedForm extends Component {
     postDataHandler = () => {
         const payload = {
             date: this.state.date.toString(),
-            time: this.state.time.toString(),
-            simpleTime: this.state.time.toTimeString().slice(0, 5),
+            // time: this.state.time.toString(),
+            simpleTime: this.state.date.toTimeString().slice(0, 5),
             milk: parseInt(this.state.milk),
             food: [...this.state.food],
             foodOption: this.state.foodOption,
@@ -128,7 +128,7 @@ class FeedForm extends Component {
             if(response){
                 this.setState({
                     date: new Date(),
-                    time: new Date(),
+                    // time: new Date(),
                     simpleTime: new Date().toTimeString().slice(0, 5),
                     milk: 0,
                     notes: '',  
@@ -203,7 +203,7 @@ class FeedForm extends Component {
     cancelHandler = (page) => {
         this.setState({
             date: new Date(),
-            time: new Date(),
+            // time: new Date(),
             simpleTime: new Date().toTimeString().slice(0, 5),
             milk: 0,
             notes: '',
@@ -343,8 +343,8 @@ class FeedForm extends Component {
         console.log(`https://baby-feeder-uat-185a3.firebaseio.com/feeds/${feedItem}.json`)
         const payload = {
             date: this.state.date.toString(),
-            time: this.state.time.toString(),
-            simpleTime: this.state.time.toTimeString().slice(0, 5),
+            // time: this.state.time.toString(),
+            simpleTime: this.state.date.toTimeString().slice(0, 5),
             milk: parseInt(this.state.milk),
             food: [...this.state.food],
             foodOption: this.state.foodOption,
@@ -356,7 +356,7 @@ class FeedForm extends Component {
                 if (response) {
                     this.setState({
                         date: new Date(),
-                        time: new Date(),
+                        // time: new Date(),
                         simpleTime: new Date().toTimeString().slice(0, 5),
                         milk: 0,
                         notes: '',
@@ -440,7 +440,7 @@ class FeedForm extends Component {
                 const data = response.data;
                 this.setState({
                     date: new Date(data.date),
-                    time: new Date(data.time),
+                    // time: new Date(data.time),
                     simpleTime: data.simpleTime,
                     milk: data.milk,
                     food: data.food ? data.food : [],
